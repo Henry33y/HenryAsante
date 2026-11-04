@@ -2,10 +2,60 @@ import { useEffect, useRef, useState } from 'react'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin'
 import Lenis from 'lenis'
 import 'lenis/dist/lenis.css'
+import { ScribbleButton } from './components/ScribbleButton'
 
-gsap.registerPlugin(useGSAP, ScrollTrigger)
+gsap.registerPlugin(useGSAP, ScrollTrigger, DrawSVGPlugin)
+
+// Exact winding screen-fill transition scribble path from alejandroha.com
+const SCROLL_DRAW_PATH =
+  'M299.654 453.865C505.574 319.225 711.494 184.585 836.054 109.945C960.614 35.3048 997.574 24.7448 944.014 110.385C890.454 196.025 745.254 378.185 571.454 634.385C397.654 890.585 199.654 1215.3 110.854 1382.58C22.0544 1549.86 48.4544 1549.86 77.8944 1540.62C107.334 1531.38 139.014 1512.9 367.854 1319.9C596.694 1126.9 1021.73 759.945 1255.21 555.065C1488.69 350.185 1517.73 318.505 1527.41 306.145C1537.09 293.785 1526.53 301.705 1346.85 618.625C1167.17 935.545 818.694 1561.22 635.214 1896.74C451.734 2232.26 443.814 2258.66 447.654 2268.3C451.494 2277.94 467.334 2270.02 511.134 2236.9C554.934 2203.78 626.214 2145.7 966.534 1817.46C1306.85 1489.22 1914.05 892.585 2263.81 557.505C2613.57 222.425 2687.49 166.985 2741.41 129.185C2795.33 91.3848 2827.01 72.9048 2843.33 67.3448C2859.65 61.7848 2859.65 69.7048 2849.09 96.2248C2838.53 122.745 2817.41 167.625 2584.77 544.505C2352.13 921.385 1370.37 2165.43 1139.25 2537.83C908.134 2910.23 902.854 2926.07 902.774 2939.51C902.694 2952.95 907.974 2963.51 1255.21 2613.87C1602.45 2264.23 2829.73 1017.54 2903.53 1071.46C2977.33 1125.38 2176.12 2817.04 2128 3037C2079.88 3256.96 2911.24 2018.56 3172 1793'
+
+// Authentic Services items from alejandroha.com
+const servicesData = [
+  {
+    number: '[01]',
+    title: { en: 'Webflow development', es: 'Desarrollo Webflow' },
+    description: {
+      en: 'Custom Webflow websites built for complete design freedom and advanced interactions, with a clean, easy to manage CMS. Update your content anytime without relying on a developer.',
+      es: 'Sitios en Webflow pensados para libertad de diseño y animación avanzada, con estructuras simples de administrar. Actualiza contenido cuando quieras, sin depender de un desarrollador.',
+    },
+    image: '/images/aha-img__02.avif',
+    imageAlt: 'Torre Agency Webflow Website Design',
+  },
+  {
+    number: '[02]',
+    title: { en: 'Shopify / Ecommerce', es: 'Shopify / Ecommerce' },
+    description: {
+      en: 'Custom Shopify stores designed around your brand, creating shopping experiences that feel unique instead of generic.',
+      es: 'Shopify es la plataforma de ecommerce elegida por marcas de todo el mundo, y la personalizo a fondo, para una experiencia de compra que no se siente genérica.',
+    },
+    image: '/images/aha-img__04.avif',
+    imageAlt: '1957 Studio Shopify Store Design',
+  },
+  {
+    number: '[03]',
+    title: { en: 'Animations & Microinteractions', es: 'Animaciones y micro-interacciones' },
+    description: {
+      en: 'Motion has a purpose. I design animations that guide users, reinforce your brand identity, and turn every scroll into a memorable experience.',
+      es: 'El movimiento comunica. Diseño animaciones que guían al usuario, refuerzan la identidad de la marca y convierten cada scroll en una experiencia memorable.',
+    },
+    image: '/images/aha-img__03.avif',
+    imageAlt: 'Laptop Animation and Interactive Interface',
+  },
+  {
+    number: '[04]',
+    title: { en: 'Custom code', es: 'Código personalizado' },
+    description: {
+      en: "Webflow and Shopify are incredibly powerful, but some projects demand more. That's where custom code makes the difference, creating the kind of polished experiences often seen on Awwwards.",
+      es: 'Webflow y Shopify son plataformas increíbles, pero hay proyectos que piden ir más allá. Ahí entra el código personalizado, el detalle que separa un sitio bueno de uno digno de un reconocimiento como Awwwards.',
+    },
+    image: '/images/aha-img__05.avif',
+    imageAlt: 'Developer working with custom code and animations',
+  },
+]
 
 export default function App() {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -15,6 +65,14 @@ export default function App() {
   const aboutHeadingRef = useRef<HTMLHeadingElement>(null)
   const bracketLeftRef = useRef<HTMLSpanElement>(null)
   const bracketRightRef = useRef<HTMLSpanElement>(null)
+  const scrollDrawTransitionRef = useRef<HTMLDivElement>(null)
+  const scrollDrawSectionRef = useRef<HTMLElement>(null)
+  const scrollDrawOverlayRef = useRef<HTMLDivElement>(null)
+  const scrollDrawPathRef = useRef<SVGPathElement>(null)
+  const servicesHeadingRef = useRef<HTMLHeadingElement>(null)
+  const servicesBracketLeftRef = useRef<HTMLSpanElement>(null)
+  const servicesBracketRightRef = useRef<HTMLSpanElement>(null)
+  const [activeService, setActiveService] = useState<number>(0)
   const lenisRef = useRef<Lenis | null>(null)
   const [language, setLanguage] = useState<'en' | 'es'>('en')
   const [copiedNotification, setCopiedNotification] = useState<string | null>(null)
@@ -251,6 +309,93 @@ export default function App() {
           toggleActions: 'play none none none',
         },
       })
+
+      // 7. Bracket Closing Parallax Scrub ([ Services ])
+      if (
+        servicesBracketLeftRef.current &&
+        servicesBracketRightRef.current &&
+        scrollDrawTransitionRef.current
+      ) {
+        const mmServicesBracket = gsap.matchMedia()
+        mmServicesBracket.add(
+          {
+            isMobile: '(max-width: 640px)',
+            isTablet: '(min-width: 641px) and (max-width: 1024px)',
+            isDesktop: '(min-width: 1025px)',
+          },
+          (context) => {
+            const { isMobile, isTablet } = context.conditions as {
+              isMobile: boolean
+              isTablet: boolean
+              isDesktop: boolean
+            }
+            const offset = isMobile ? 22 : isTablet ? 32 : 44
+
+            gsap.fromTo(
+              servicesBracketLeftRef.current,
+              { x: -offset },
+              {
+                x: 0,
+                ease: 'sine.out',
+                scrollTrigger: {
+                  trigger: scrollDrawTransitionRef.current,
+                  start: 'top 85%',
+                  end: 'top 15%',
+                  scrub: 0.8,
+                  invalidateOnRefresh: true,
+                },
+              }
+            )
+
+            gsap.fromTo(
+              servicesBracketRightRef.current,
+              { x: offset },
+              {
+                x: 0,
+                ease: 'sine.out',
+                scrollTrigger: {
+                  trigger: scrollDrawTransitionRef.current,
+                  start: 'top 85%',
+                  end: 'top 15%',
+                  scrub: 0.8,
+                  invalidateOnRefresh: true,
+                },
+              }
+            )
+          }
+        )
+      }
+
+      // 8. Signature Scribble Draw Screen-Fill Transition from alejandroha.com
+      if (scrollDrawTransitionRef.current && scrollDrawPathRef.current && scrollDrawSectionRef.current) {
+        const transitionEl = scrollDrawTransitionRef.current
+        const sectionEl = scrollDrawSectionRef.current
+        const pathEl = scrollDrawPathRef.current
+
+        const updateHeight = () => {
+          gsap.set(transitionEl, { height: Math.max(sectionEl.scrollHeight, window.innerHeight) })
+        }
+        updateHeight()
+
+        gsap.set(pathEl, { strokeWidth: '5%', drawSVG: '0% 0%' })
+
+        const drawTl = gsap.timeline({
+          scrollTrigger: {
+            trigger: transitionEl,
+            start: 'top top',
+            end: '+=200%',
+            scrub: true,
+            pin: true,
+            anticipatePin: 1,
+            invalidateOnRefresh: true,
+            onRefreshInit: updateHeight,
+          },
+        })
+
+        drawTl
+          .to(pathEl, { drawSVG: '0% 85%', duration: 1, ease: 'none' }, 0)
+          .to(pathEl, { strokeWidth: '80%', duration: 0.75, ease: 'none' }, 0.25)
+      }
     },
     { scope: containerRef }
   )
@@ -301,9 +446,8 @@ export default function App() {
             ref={brandRef}
             onClick={scrollToTop}
             aria-label="Alejandro HA - Scroll to top"
-            className={`pointer-events-auto block origin-top-left text-left bg-transparent border-none p-0 cursor-pointer transition-opacity duration-300 ${
-              isScrolled ? 'hover:opacity-75' : ''
-            }`}
+            className={`pointer-events-auto block origin-top-left text-left bg-transparent border-none p-0 cursor-pointer transition-opacity duration-300 ${isScrolled ? 'hover:opacity-75' : ''
+              }`}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -380,21 +524,27 @@ export default function App() {
           </button>
         </div>
 
-        {/* Top-Right Pill Action Buttons */}
+        {/* Top-Right Pill Action Buttons with Authentic Scribble Animation */}
         <div className="pointer-events-auto flex items-center gap-3 sm:gap-4">
-          <button
+          <ScribbleButton
+            variant="dark"
+            size="sm"
+            weight="normal"
             onClick={() => showNotification(language === 'en' ? 'Book a Call opened' : 'Reunión agendada')}
-            className="nav-button-item px-5 py-2 sm:px-6 sm:py-2.5 rounded-full bg-[#080912] text-white hover:bg-[#2a4093] text-[11px] sm:text-xs font-semibold tracking-wider uppercase transition-all duration-300 hover:scale-105 active:scale-95 shadow-sm cursor-pointer"
+            className="nav-button-item shadow-sm"
           >
             {language === 'en' ? 'BOOK A CALL' : 'AGENDAR LLAMADA'}
-          </button>
+          </ScribbleButton>
 
-          <button
+          <ScribbleButton
+            variant="blue"
+            size="sm"
+            weight="normal"
             onClick={() => showNotification(language === 'en' ? 'Quote Request opened' : 'Cotización solicitada')}
-            className="nav-button-item px-5 py-2 sm:px-6 sm:py-2.5 rounded-full bg-[#2a4093] text-white hover:bg-[#080912] text-[11px] sm:text-xs font-semibold tracking-wider uppercase transition-all duration-300 hover:scale-105 active:scale-95 shadow-sm cursor-pointer"
+            className="nav-button-item shadow-sm"
           >
             {language === 'en' ? 'GET A QUOTE' : 'COTIZAR AHORA'}
-          </button>
+          </ScribbleButton>
         </div>
       </header>
 
@@ -553,34 +703,163 @@ export default function App() {
               </p>
             </div>
 
-            {/* Interactive Call to Action Scribble / Pill Button */}
+            {/* Interactive Call to Action Scribble Button */}
             <div className="about-bio-item mt-10 sm:mt-12">
-              <button
+              <ScribbleButton
+                variant="dark"
+                size="lg"
                 onClick={() =>
                   showNotification(language === 'en' ? 'Opening contact channel...' : 'Abriendo canal de contacto...')
                 }
-                className="group relative inline-flex items-center gap-4 px-8 py-4 sm:px-9 sm:py-4.5 rounded-full bg-[#080912] text-white overflow-hidden transition-all duration-300 hover:scale-[1.03] active:scale-[0.98] shadow-lg cursor-pointer"
+                icon={
+                  <svg
+                    className="w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-300"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M5 12h14M12 5l7 7-7 7" />
+                  </svg>
+                }
+                className="shadow-lg"
               >
-                {/* Dark Blue hover slide */}
-                <span className="absolute inset-0 bg-[#2a4093] translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out" />
-
-                <span className="relative z-10 text-xs sm:text-[13px] font-bold tracking-widest uppercase">
-                  {language === 'en' ? "LET'S TALK" : 'COTIZA AQUÍ'}
-                </span>
-
-                <svg
-                  className="relative z-10 w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-300"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M5 12h14M12 5l7 7-7 7" />
-                </svg>
-              </button>
+                {language === 'en' ? "LET'S TALK" : 'COTIZA AQUÍ'}
+              </ScribbleButton>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ==========================================================================
+          4. Transition Section: Anchor & Signature Liquid Ink Screen-Fill
+          ========================================================================== */}
+      <div id="services" className="anchor" />
+
+      <div
+        ref={scrollDrawTransitionRef}
+        data-theme-section="light"
+        data-scroll-draw-transition=""
+        className="scroll-draw-transition"
+      >
+        <section
+          ref={scrollDrawSectionRef}
+          data-scroll-draw-section=""
+          className="services-header__w"
+        >
+          <p className="services-big-txt text-4xl sm:text-5xl md:text-6xl lg:text-[4.75rem] xl:text-[5.25rem] font-bold uppercase text-[#080912] tracking-tight leading-[0.95]">
+            {language === 'en' ? 'Small details.' : 'Pequeños detalles.'}
+            <span className="services-big-txt__span text-6xl sm:text-8xl md:text-9xl lg:text-[9.5rem] xl:text-[10.75rem] font-bold text-[#080912] tracking-tight leading-[0.92] mt-1 sm:mt-2">
+              {language === 'en' ? 'Big impact.' : 'Gran impacto.'}
+            </span>
+          </p>
+
+          <h2
+            ref={servicesHeadingRef}
+            data-bracket-heading=""
+            style={{ fontFamily: 'var(--body-font)' }}
+            className="heading-h2 txt-color-blue text-3xl sm:text-4xl md:text-5xl lg:text-[3.85rem] xl:text-[4.35rem] font-bold mt-6 sm:mt-8 tracking-tight text-[#2a4093] flex items-center justify-center select-none"
+          >
+            <span
+              ref={servicesBracketLeftRef}
+              data-bracket-left=""
+              className="heading-bracket is--left inline-block will-change-transform font-bold mr-2 sm:mr-3"
+            >
+              [
+            </span>
+            <span className="services-title-txt font-bold">
+              {language === 'en' ? 'Services' : 'Servicios'}
+            </span>
+            <span
+              ref={servicesBracketRightRef}
+              data-bracket-right=""
+              className="heading-bracket is--right inline-block will-change-transform font-bold ml-2 sm:ml-3"
+            >
+              ]
+            </span>
+          </h2>
+        </section>
+
+        {/* Liquid Ink Scribble SVG Overlay (Pin & Scrub screen-fill into Services) */}
+        <div
+          ref={scrollDrawOverlayRef}
+          data-scroll-draw-overlay=""
+          className="scroll-draw-transition__overlay"
+        >
+          <div className="scroll-draw-transition__shape">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="100%"
+              viewBox="0 0 3222 3114"
+              fill="none"
+              preserveAspectRatio="none"
+              className="transition__svg"
+            >
+              <path
+                ref={scrollDrawPathRef}
+                d={SCROLL_DRAW_PATH}
+                stroke="currentColor"
+                strokeWidth="0"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      {/* ==========================================================================
+          5. Services Showcase Section (Seamless Dark Blue Flow)
+          ========================================================================== */}
+      <section data-theme-section="dark" data-services="" className="services py-20 sm:py-28">
+        <div className="max-w-7xl mx-auto px-6 sm:px-12">
+          <div className="services-list divide-y divide-[#e2e1e1]/20">
+            {servicesData.map((service, index) => {
+              const isActive = activeService === index
+              return (
+                <div
+                  key={index}
+                  data-services-item=""
+                  className="service-item group py-8 sm:py-10 transition-all duration-300"
+                >
+                  <div
+                    onClick={() => setActiveService(index)}
+                    className="flex items-center justify-between cursor-pointer select-none"
+                  >
+                    <span className="font-bold text-2xl sm:text-4xl md:text-5xl opacity-80 group-hover:opacity-100 transition-opacity">
+                      {service.number}
+                    </span>
+                    <h3 className="text-xl sm:text-3xl md:text-4xl font-bold uppercase tracking-tight text-right group-hover:translate-x-[-8px] transition-transform">
+                      {service.title[language]}
+                    </h3>
+                  </div>
+
+                  {/* Expandable Visual & Description */}
+                  <div
+                    className={`grid grid-cols-1 lg:grid-cols-12 gap-8 items-center mt-6 transition-all duration-500 overflow-hidden ${isActive
+                        ? 'max-h-[800px] opacity-100'
+                        : 'max-h-0 opacity-0 lg:max-h-none lg:opacity-100 hidden lg:grid'
+                      }`}
+                  >
+                    <div className="lg:col-span-5 text-sm sm:text-base md:text-lg text-[#e2e1e1]/85 leading-relaxed">
+                      <p>{service.description[language]}</p>
+                    </div>
+                    <div className="lg:col-span-7">
+                      <div className="service-image-wrap aspect-video max-h-[420px] overflow-hidden rounded-xl border border-white/10 shadow-2xl">
+                        <img
+                          src={service.image}
+                          alt={service.imageAlt}
+                          className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
+                          loading="lazy"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )
+            })}
           </div>
         </div>
       </section>
