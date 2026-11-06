@@ -419,13 +419,13 @@
 }
 
 /* ==========================================================================
-   Services Section Showcase
+   Services Section Showcase - Authentic alejandroha.com Scroll & Layout
    ========================================================================== */
 
 .services {
   background-color: var(--dark-blue);
   width: 100%;
-  min-height: 100vh;
+  height: 100vh;
   color: var(--light-silver);
   position: relative;
   overflow: hidden;
@@ -433,64 +433,577 @@
 
 .services-wrapper {
   width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.services-sticky {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.services-list {
+  will-change: transform;
+  width: 100%;
   position: relative;
 }
 
 .service-item {
+  flex-flow: column;
+  flex: none;
   width: 100%;
-  position: relative;
-  border-top: 1px solid rgba(226, 225, 221, 0.25);
-  transition: border-color 0.3s ease;
+  display: flex;
 }
 
 .service-row {
-  grid-column-gap: 1.5em;
+  grid-column-gap: 1em;
   grid-row-gap: 1em;
-  grid-template-columns: auto 1fr;
-  align-items: baseline;
-  padding: 1.75em 2.5em;
-  display: grid;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.service-row:hover {
-  background-color: rgba(255, 255, 255, 0.05);
+  border-top: 2px solid #ffffff; /* DEEP WHITE TOP BORDER */
+  border-bottom: 2px solid #ffffff; /* DEEP WHITE BOTTOM BORDER */
+  grid-template-rows: auto;
+  grid-template-columns: 1fr 1fr;
+  grid-auto-columns: 1fr;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 0.9em 2em;
+  display: flex;
+  background-color: var(--dark-blue);
+  box-sizing: border-box;
+  position: relative;
+  z-index: 5;
 }
 
 .service-number {
   font-family: var(--body-font);
   white-space: nowrap;
-  font-size: clamp(2rem, 3.5vw, 3.25rem);
-  line-height: 1.1;
+  font-size: clamp(2.25rem, 3.8vw, 3.5em);
+  line-height: 1.2;
   font-weight: 700;
-  opacity: 0.9;
+  color: #ffffff;
 }
 
 .service-title {
   text-align: right;
   text-transform: uppercase;
-  font-size: clamp(1.5rem, 2.8vw, 2.5rem);
+  font-size: clamp(1.5rem, 2.7vw, 2.5em);
   font-weight: 700;
   letter-spacing: -0.01em;
+  color: #ffffff;
 }
 
 .service-visual {
+  flex: none;
   width: 100%;
   position: relative;
   overflow: hidden;
+  background-color: var(--dark-blue);
+}
+
+.service-description {
+  z-index: 1;
+  width: 26%;
+  position: absolute;
+  bottom: 2em;
+  left: 2em;
+  font-size: clamp(0.95rem, 1.1vw, 1.15rem);
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.92);
+  font-weight: 400;
 }
 
 .service-image-wrap {
-  width: 100%;
-  border-radius: 0.75rem;
+  z-index: 2;
+  width: 71%;
+  height: 100%;
+  position: absolute;
+  top: 0%;
+  left: 29%;
   overflow: hidden;
-  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
+  background-color: #ffffff; /* Solid White Card Background */
+  border-left: 2px solid #ffffff; /* DEEP WHITE VERTICAL BORDER */
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
 }
 
 .service-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: left top;
   display: block;
+}
+
+/* Tablet Responsive */
+@media screen and (max-width: 991px) {
+  .services,
+  .services-wrapper,
+  .services-sticky,
+  .services-list {
+    width: 100%;
+    height: auto;
+    position: relative;
+    overflow: visible;
+  }
+
+  .service-item {
+    width: 100%;
+    height: auto;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .service-row {
+    z-index: 2;
+    background-color: var(--dark-blue);
+    padding: 0.75em 1.5em;
+    position: relative;
+  }
+
+  .service-number {
+    font-size: 2.625em;
+  }
+
+  .service-visual {
+    background-color: var(--dark-blue);
+    flex-flow: column;
+    width: 100%;
+    height: auto;
+    display: flex;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .service-description {
+    z-index: 2;
+    width: 100%;
+    padding: 2.5em 1.5em 1.5em;
+    position: relative;
+    inset: auto;
+  }
+
+  .service-image-wrap {
+    z-index: 1;
+    aspect-ratio: 16 / 9;
+    flex: none;
+    order: -9999;
+    width: 100%;
+    height: auto;
+    position: relative;
+    inset: auto;
+    border-left: none;
+    border-bottom: 2px solid #ffffff;
+  }
+
+  .service-title {
+    font-size: 1.875em;
+  }
+}
+
+/* Mobile Responsive */
+@media screen and (max-width: 767px) {
+  .service-row {
+    padding: 0.6em 1em;
+  }
+
+  .service-number {
+    font-size: 1.95em;
+  }
+
+  .service-description {
+    padding: 1.5em 1em;
+    font-size: 0.95rem;
+  }
+
+  .service-image-wrap {
+    width: 100%;
+  }
+
+  .service-title {
+    font-size: 1.25em;
+  }
+}
+
+@media screen and (max-width: 479px) {
+  .service-row {
+    padding-top: 0.6em;
+    padding-bottom: 0.6em;
+  }
+}
+
+/* ==========================================================================
+   Portfolio Section & 3D Orbit Carousel - Authentic alejandroha.com
+   ========================================================================== */
+
+.portfolio {
+  grid-column-gap: 5em;
+  grid-row-gap: 5em;
+  flex-flow: column;
+  padding: 7.5em 2em;
+  display: flex;
+  background-color: var(--light-silver);
+  color: var(--ink-black);
+  position: relative;
+  overflow: hidden;
+}
+
+.portfolio-header-w {
+  grid-column-gap: 2em;
+  grid-row-gap: 2em;
+  text-align: center;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+
+.portfolio-header__p {
+  text-transform: uppercase;
+  font-size: clamp(1.8rem, 3.8vw, 3.75rem);
+  font-weight: 700;
+  line-height: 1.15;
+  max-width: 24ch;
+  margin: 0 auto;
+  letter-spacing: -0.02em;
+  text-align: center;
+}
+
+.portfolio-orbit {
+  z-index: 1;
+  width: 100%;
+  height: 85.5dvh;
+  min-height: 38em;
+  max-height: 57em;
+  padding: 1em;
+  position: relative;
+  overflow: hidden;
+}
+
+.portfolio-orbit__content {
+  grid-column-gap: 24px;
+  grid-row-gap: 24px;
+  grid-template-rows: auto;
+  grid-template-columns: minmax(18em, 0.75fr) minmax(20em, 1.25fr);
+  width: 100%;
+  height: 100%;
+  display: grid;
+  align-items: center;
+}
+
+.portfolio-orbit__info {
+  z-index: 2000;
+  grid-column-gap: 5em;
+  grid-row-gap: 5em;
+  pointer-events: auto;
+  flex-flow: column;
+  justify-content: space-between;
+  height: 100%;
+  display: flex;
+}
+
+.portfolio-orbit__count {
+  grid-column-gap: 0.2em;
+  grid-row-gap: 0.2em;
+  justify-content: flex-start;
+  align-items: center;
+  font-size: clamp(3rem, 4vw, 4.25rem);
+  font-weight: 700;
+  display: flex;
+  user-select: none;
+}
+
+.portfolio-orbit__count-col {
+  position: relative;
+  overflow: hidden;
+  height: 1.15em;
+  display: flex;
+  align-items: center;
+}
+
+.portfolio-orbit__count-txt {
+  width: 2ch;
+  margin: 0;
+  font-size: 1em;
+  line-height: 1;
+  font-family: var(--body-font);
+}
+
+.portfolio-orbit__count-divider {
+  background-color: currentColor;
+  width: 2px;
+  height: 0.75em;
+  transform: rotate(15deg);
+  margin: 0 0.15em;
+}
+
+.portfolio-orbit__info-bottom {
+  grid-column-gap: 2.5em;
+  grid-row-gap: 2.5em;
+  flex-flow: column;
+  display: flex;
+}
+
+.portfolio-orbit__description {
+  width: 100%;
+  max-width: 30em;
+  display: grid;
+  position: relative;
+  min-height: 8.5em;
+}
+
+.portfolio-orbit__content-item {
+  grid-area: 1 / 1;
+  width: 100%;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.portfolio-orbit__content-item h3 {
+  font-size: clamp(1.85rem, 2.6vw, 2.65rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.5em;
+  text-transform: uppercase;
+  color: var(--ink-black);
+}
+
+.portfolio-orbit__content-item p {
+  font-size: clamp(0.95rem, 1.1vw, 1.15rem);
+  line-height: 1.6;
+  color: rgba(8, 9, 18, 0.85);
+}
+
+.portfolio-orbit__overlay-nav {
+  grid-column-gap: 1.5em;
+  grid-row-gap: 1.5em;
+  display: flex;
+  align-items: center;
+}
+
+.portfolio-orbit__btn {
+  width: 3.5em;
+  height: 3.5em;
+  color: var(--dark-blue);
+  background-color: transparent;
+  border: 1px solid rgba(42, 64, 147, 0.25);
+  border-radius: 50%;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  position: relative;
+  cursor: pointer;
+  outline: none;
+  transition: transform 0.475s cubic-bezier(0.625, 0.05, 0, 1), opacity 0.475s cubic-bezier(0.625, 0.05, 0, 1);
+}
+
+.portfolio-orbit__btn-overlay {
+  z-index: 2;
+  position: absolute;
+  inset: -1px;
+  pointer-events: none;
+  transition: transform 0.475s cubic-bezier(0.625, 0.05, 0, 1);
+}
+
+.portfolio-orbit__btn:hover .portfolio-orbit__btn-overlay {
+  transform: scale(1.4);
+}
+
+.portfolio-orbit__overlay-nav:hover:has(.portfolio-orbit__btn:hover) .portfolio-orbit__btn {
+  opacity: 0.4;
+}
+
+.portfolio-orbit__btn:hover {
+  transform: scale(0.85);
+  opacity: 1 !important;
+}
+
+.portfolio-orbit__btn-overlay-corner {
+  border-top: 1px solid var(--dark-blue);
+  border-left: 1px solid var(--dark-blue);
+  border-top-left-radius: 4px;
+  width: 8px;
+  height: 8px;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.portfolio-orbit__btn-overlay-corner.top-right {
+  top: 0;
+  left: auto;
+  right: 0;
+  transform: rotate(90deg);
+}
+
+.portfolio-orbit__btn-overlay-corner.bottom-left {
+  top: auto;
+  bottom: 0;
+  left: 0;
+  transform: rotate(-90deg);
+}
+
+.portfolio-orbit__btn-overlay-corner.bottom-right {
+  top: auto;
+  bottom: 0;
+  left: auto;
+  right: 0;
+  transform: rotate(180deg);
+}
+
+.portfolio-orbit__btn-arrow {
+  flex: none;
+  width: 1.1em;
+  height: 0.8em;
+  transition: transform 0.3s ease;
+}
+
+.portfolio-orbit__btn-arrow.next {
+  transform: rotate(180deg);
+}
+
+.portfolio-orbit__collection {
+  z-index: 1;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  position: relative;
+}
+
+.portfolio-orbit__list {
+  place-items: center;
+  display: grid;
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.portfolio-orbit__item {
+  will-change: transform, opacity, filter;
+  grid-area: 1 / 1;
+  justify-content: center;
+  align-items: center;
+  width: max-content;
+  display: flex;
+  position: relative;
+}
+
+.portfolio-orbit__card {
+  aspect-ratio: 4 / 3;
+  border-radius: 0.65em;
+  width: clamp(16em, 26vw, 32em);
+  display: block;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  text-decoration: none;
+}
+
+.portfolio-orbit__image-mask {
+  will-change: clip-path;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  border-radius: 0.65em;
+  background-color: #080912;
+}
+
+.portfolio-orbit__placeholder {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+  display: block;
+  position: absolute;
+  inset: 0;
+  transition: opacity 0.5s ease;
+}
+
+.portfolio-orbit__video {
+  z-index: 1;
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+  display: block;
+  position: relative;
+}
+
+.portfolio-cta {
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  margin-top: 2em;
+}
+
+/* Tablet Responsive */
+@media screen and (max-width: 991px) {
+  .portfolio {
+    padding: 5.625em 1.5em;
+    grid-column-gap: 3.5em;
+    grid-row-gap: 3.5em;
+  }
+
+  .portfolio-orbit {
+    height: 64.125dvh;
+    font-size: 0.75em;
+  }
+
+  .portfolio-orbit__content {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+    flex-flow: column;
+  }
+
+  .portfolio-orbit__count {
+    font-size: 3em;
+  }
+
+  .portfolio-orbit__btn {
+    width: 3em;
+    height: 3em;
+  }
+}
+
+/* Mobile Responsive */
+@media screen and (max-width: 767px) {
+  .portfolio {
+    padding: 4.21875em 1em;
+    grid-column-gap: 2.5em;
+    grid-row-gap: 2.5em;
+  }
+
+  .portfolio-orbit {
+    height: auto;
+    min-height: 0;
+    max-height: none;
+    padding: 0;
+    overflow: visible;
+  }
+
+  .portfolio-orbit__content {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+    gap: 2.5em;
+  }
+
+  .portfolio-orbit__info {
+    grid-column-gap: 2em;
+    grid-row-gap: 2em;
+    height: auto;
+  }
+
+  .portfolio-orbit__count {
+    font-size: 2.25em;
+  }
+
+  .portfolio-orbit__collection {
+    min-height: 24em;
+  }
+
+  .portfolio-orbit__card {
+    width: clamp(14em, 68vw, 22em);
+  }
 }

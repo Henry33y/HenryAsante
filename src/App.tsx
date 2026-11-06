@@ -57,6 +57,60 @@ const servicesData = [
   },
 ]
 
+// Authentic Portfolio projects from alejandroha.com
+const portfolioProjects = [
+  {
+    title: 'Cinetica Studio',
+    url: 'https://www.cinetica.studio/',
+    placeholder: '/images/cinetica-placeholder.avif',
+    video: '/videos/cinetica-video.mp4',
+    description: {
+      en: 'An immersive portfolio experience showcasing how Cinética Studio transforms bold ideas into digital realities through CGI, XR, real-time technology, and interactive design.',
+      es: 'Una experiencia de portafolio inmersiva que muestra cómo Cinética Studio transforma ideas audaces en realidades digitales a través de CGI, XR, tecnología en tiempo real y diseño interactivo.',
+    },
+  },
+  {
+    title: 'Luan Studio',
+    url: 'https://www.luanstudio.com/',
+    placeholder: '/images/luanstudio-placeholder.avif',
+    video: '/videos/luanstudio-video.mp4',
+    description: {
+      en: 'A digital portfolio for Luan Studio that translates their identity as a branding studio into seamless navigation and a memorable visual experience.',
+      es: 'Un portafolio digital para Luan Studio que traduce su identidad como estudio de branding en una navegación fluida y una experiencia visual memorable.',
+    },
+  },
+  {
+    title: 'Casa Aranzazu',
+    url: 'https://www.casaranzazuslp.com/',
+    placeholder: '/images/aranzazu-placeholder.avif',
+    video: '/videos/aranzazu-video.mp4',
+    description: {
+      en: 'Landing Page with booking engine integration, designed to guide the user from the first scroll to effortless reservation without friction.',
+      es: 'Landing Page con integración de motor de reservas, pensada para llevar al usuario del primer scroll a la reservación sin fricción.',
+    },
+  },
+  {
+    title: 'Contraste',
+    url: 'https://contraste-mx.webflow.io/',
+    placeholder: '/images/contraste-placeholder.avif',
+    video: '/videos/contraste-video.mp4',
+    description: {
+      en: 'A website that transforms more than 35 years of experience in experiential marketing and event production into a dynamic and memorable digital journey.',
+      es: 'Un sitio web que transforma más de 35 años de experiencia en marketing experiencial y producción de eventos en una experiencia digital dinámica y memorable.',
+    },
+  },
+  {
+    title: 'Altapets',
+    url: 'https://altapetscare.com/',
+    placeholder: '/images/altapets-placeholder.avif',
+    video: '/videos/altapets-video.mp4',
+    description: {
+      en: 'An e-commerce experience for Altapets where every key component (header, footer, cart, and subscriptions) was custom-built with code, taking the site far beyond standard Shopify.',
+      es: 'Un e-commerce para Altapets donde cada pieza clave (header, footer, carrito y suscripciones) fue construida a medida con código, llevando el sitio mucho más allá de un Shopify.',
+    },
+  },
+]
+
 export default function App() {
   const containerRef = useRef<HTMLDivElement>(null)
   const heroRef = useRef<HTMLDivElement>(null)
@@ -72,7 +126,31 @@ export default function App() {
   const servicesHeadingRef = useRef<HTMLHeadingElement>(null)
   const servicesBracketLeftRef = useRef<HTMLSpanElement>(null)
   const servicesBracketRightRef = useRef<HTMLSpanElement>(null)
-  const [activeService, setActiveService] = useState<number>(0)
+  const servicesRef = useRef<HTMLElement>(null)
+  const servicesListRef = useRef<HTMLDivElement>(null)
+  const [isBrandWhite, setIsBrandWhite] = useState(false)
+
+  // Portfolio Orbit Refs & State
+  const portfolioRef = useRef<HTMLElement>(null)
+  const portfolioHeadingRef = useRef<HTMLHeadingElement>(null)
+  const portfolioBracketLeftRef = useRef<HTMLSpanElement>(null)
+  const portfolioBracketRightRef = useRef<HTMLSpanElement>(null)
+  const portfolioOrbitRef = useRef<HTMLDivElement>(null)
+  const portfolioListRef = useRef<HTMLDivElement>(null)
+  const currentCountRef = useRef<HTMLParagraphElement>(null)
+  const [activeOrbitIndex, setActiveOrbitIndex] = useState(0)
+
+  const orbitStepRef = useRef<{ step: number }>({ step: 0 })
+  const orbitActiveIndexRef = useRef<number>(0)
+  const orbitCardsRef = useRef<(HTMLAnchorElement | null)[]>([])
+  const orbitItemsRef = useRef<(HTMLDivElement | null)[]>([])
+  const orbitVideosRef = useRef<(HTMLVideoElement | null)[]>([])
+  const orbitPlaceholdersRef = useRef<(HTMLImageElement | null)[]>([])
+  const isOrbitInViewRef = useRef(false)
+  const orbitWidthRef = useRef<number>(360)
+  const orbitStepTweenRef = useRef<gsap.core.Tween | null>(null)
+  const orbitRotationRef = useRef<{ rotation: number }>({ rotation: 0 })
+
   const lenisRef = useRef<Lenis | null>(null)
   const [language, setLanguage] = useState<'en' | 'es'>('en')
   const [copiedNotification, setCopiedNotification] = useState<string | null>(null)
@@ -114,6 +192,163 @@ export default function App() {
       window.scrollTo({ top: 0, behavior: 'smooth' })
     }
   }
+
+  // Portfolio Orbit calculation helpers & handlers
+  const wrapIndex = (val: number) => {
+    const count = portfolioProjects.length
+    return ((Math.round(val) % count) + count) % count
+  }
+
+  const updateOrbitPositions = () => {
+    const count = portfolioProjects.length
+    const yWidth = orbitWidthRef.current || 360
+    const spreadX = 0.72 * yWidth
+    const blurFactor = 0.04 * yWidth
+    const currentStep = orbitStepRef.current?.step ?? 0
+    const rot = orbitRotationRef.current?.rotation ?? 0
+
+    if (portfolioListRef.current) {
+      gsap.set(portfolioListRef.current, { rotation: rot })
+    }
+
+    const activeIdx = wrapIndex(currentStep)
+
+    orbitItemsRef.current.forEach((item, a) => {
+      if (!item) return
+      const card = orbitCardsRef.current[a]
+      const isActive = a === activeIdx
+
+      if (card) {
+        if (isActive) {
+          card.style.pointerEvents = 'auto'
+          card.style.cursor = 'pointer'
+          card.setAttribute('tabindex', '0')
+          card.removeAttribute('aria-disabled')
+        } else {
+          card.style.pointerEvents = 'auto'
+          card.style.cursor = 'pointer'
+          card.setAttribute('tabindex', '-1')
+          card.setAttribute('aria-disabled', 'true')
+        }
+      }
+
+      const angle = ((a - currentStep) / count) * Math.PI * 2
+      const cosVal = (Math.cos(angle) + 1) / 2
+      const depth = Math.pow(cosVal, 1.3)
+      const x = Math.sin(angle) * spreadX
+      const scale = gsap.utils.interpolate(0.32, 1, depth)
+      const blur = gsap.utils.interpolate(blurFactor, 0, depth)
+      const zIndex = Math.round(1000 * depth)
+
+      gsap.set(item, {
+        x,
+        y: 0,
+        scale,
+        opacity: 1,
+        rotation: -rot,
+        filter: blur > 0.4 ? `blur(${blur.toFixed(1)}px)` : 'none',
+        zIndex,
+      })
+    })
+  }
+
+  const measureOrbit = () => {
+    const firstCard = orbitCardsRef.current[0]
+    if (firstCard) {
+      const cardW = firstCard.offsetWidth || 360
+      orbitWidthRef.current = cardW * 1.15
+    }
+    updateOrbitPositions()
+  }
+
+  const handleOrbitStep = (delta: number) => {
+    const currentH = Math.round(orbitStepRef.current?.step ?? 0)
+    const targetH = currentH + delta
+    const nextActiveIndex = wrapIndex(targetH)
+
+    // Pause all videos during step transition
+    orbitVideosRef.current.forEach((v) => {
+      if (v) v.pause()
+    })
+
+    // Animate counter
+    if (currentCountRef.current) {
+      gsap.timeline()
+        .to(currentCountRef.current, {
+          yPercent: delta > 0 ? -100 : 100,
+          opacity: 0,
+          duration: 0.22,
+          ease: 'power3.in',
+        })
+        .call(() => {
+          setActiveOrbitIndex(nextActiveIndex)
+        })
+        .set(currentCountRef.current, {
+          yPercent: delta > 0 ? 100 : -100,
+          opacity: 0,
+        })
+        .to(currentCountRef.current, {
+          yPercent: 0,
+          opacity: 1,
+          duration: 0.32,
+          ease: 'power3.out',
+        })
+    } else {
+      setActiveOrbitIndex(nextActiveIndex)
+    }
+
+    orbitActiveIndexRef.current = nextActiveIndex
+
+    orbitStepTweenRef.current?.kill()
+    orbitStepTweenRef.current = gsap.to(orbitStepRef.current, {
+      step: targetH,
+      duration: 0.75,
+      ease: 'power2.out',
+      onUpdate: updateOrbitPositions,
+      onComplete: () => {
+        const activeVideo = orbitVideosRef.current[nextActiveIndex]
+        if (activeVideo && isOrbitInViewRef.current) {
+          activeVideo.play().catch(() => {})
+        }
+      },
+    })
+  }
+
+  const handleCardClick = (e: React.MouseEvent, index: number) => {
+    const count = portfolioProjects.length
+    if (index !== orbitActiveIndexRef.current) {
+      e.preventDefault()
+      let delta = (index - orbitActiveIndexRef.current) % count
+      if (delta > count / 2) delta -= count
+      if (delta < -count / 2) delta += count
+      handleOrbitStep(delta)
+    }
+  }
+
+  // Keyboard navigation & resize handler for Portfolio Orbit
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!isOrbitInViewRef.current) return
+      const activeEl = document.activeElement
+      if (activeEl?.matches('input, textarea, select, [contenteditable="true"]')) return
+
+      if (e.key === 'ArrowRight') {
+        e.preventDefault()
+        handleOrbitStep(1)
+      } else if (e.key === 'ArrowLeft') {
+        e.preventDefault()
+        handleOrbitStep(-1)
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    window.addEventListener('resize', measureOrbit)
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown)
+      window.removeEventListener('resize', measureOrbit)
+    }
+  }, [])
 
   // GSAP Animations: Scroll transition of brand into header + Window/Curtain Parallax
   useGSAP(
@@ -396,6 +631,169 @@ export default function App() {
           .to(pathEl, { drawSVG: '0% 85%', duration: 1, ease: 'none' }, 0)
           .to(pathEl, { strokeWidth: '80%', duration: 0.75, ease: 'none' }, 0.25)
       }
+
+      // 9. Brand theme toggle on dark sections (Services & Ink screen fill)
+      if (scrollDrawTransitionRef.current && servicesRef.current) {
+        ScrollTrigger.create({
+          trigger: scrollDrawTransitionRef.current,
+          start: 'top 60px',
+          endTrigger: servicesRef.current,
+          end: 'bottom 60px',
+          onEnter: () => setIsBrandWhite(true),
+          onLeave: () => setIsBrandWhite(false),
+          onEnterBack: () => setIsBrandWhite(true),
+          onLeaveBack: () => setIsBrandWhite(false),
+        })
+      }
+
+      // 10. Services Section Fullscreen Scroll-Pinned Showcase (from alejandroha.com)
+      if (servicesRef.current && servicesListRef.current) {
+        const servicesEl = servicesRef.current
+        const listEl = servicesListRef.current
+        const rows = servicesEl.querySelectorAll<HTMLElement>('[data-services-row]')
+        const visuals = servicesEl.querySelectorAll<HTMLElement>('[data-services-visual]')
+        const imageWraps = servicesEl.querySelectorAll<HTMLElement>('[data-services-image-wrap]')
+
+        const mmServices = gsap.matchMedia()
+        mmServices.add('(min-width: 992px)', () => {
+          if (!rows.length || !visuals.length || !imageWraps.length) return
+
+          const updateHeights = () => {
+            visuals.forEach((visual, a) => {
+              const rowH = rows[a]?.offsetHeight || 60
+              const prevRowHeight = a > 0 ? (rows[a - 1]?.offsetHeight || 60) : 0
+              const visualHeight = window.innerHeight - rowH - prevRowHeight
+              gsap.set(visual, { height: Math.max(visualHeight, 0) })
+            })
+          }
+          updateHeights()
+
+          gsap.set(listEl, { y: 0 })
+          visuals.forEach((visual, a) => {
+            gsap.set(visual, { overflow: 'hidden' })
+            gsap.set(imageWraps[a], { left: '29%', width: a === 0 ? '71%' : '0%' })
+          })
+
+          const servicesTl = gsap.timeline({
+            scrollTrigger: {
+              trigger: servicesEl,
+              start: 'top top',
+              end: () => `+=${window.innerHeight * servicesData.length}`,
+              scrub: true,
+              pin: true,
+              anticipatePin: 1,
+              invalidateOnRefresh: true,
+              onRefreshInit: updateHeights,
+            },
+          })
+
+          for (let i = 0; i < servicesData.length - 1; i++) {
+            const nextIdx = i + 1
+            let prevRowsOffset = 0
+            for (let r = 0; r <= nextIdx - 2; r++) {
+              prevRowsOffset += (rows[r]?.offsetHeight || 60)
+            }
+
+            servicesTl
+              .to(visuals[i], { height: 0, duration: 1, ease: 'none' }, i)
+              .to(imageWraps[i], { left: '100%', width: '0%', duration: 1, ease: 'none' }, i)
+              .to(imageWraps[nextIdx], { left: '29%', width: '71%', duration: 1, ease: 'none' }, i)
+              .to(listEl, { y: -prevRowsOffset, duration: 1, ease: 'none' }, i)
+          }
+
+          return () => {
+            gsap.set([listEl, ...visuals, ...imageWraps], {
+              clearProps: 'transform,height,width,left,top,zIndex,overflow,opacity',
+            })
+          }
+        })
+      }
+
+      // 11. Bracket Closing Parallax ([ Portfolio ] / [ Proyectos ])
+      if (portfolioHeadingRef.current && portfolioBracketLeftRef.current && portfolioBracketRightRef.current) {
+        const mmPortfolioBracket = gsap.matchMedia()
+        mmPortfolioBracket.add(
+          {
+            isMobile: '(max-width: 640px)',
+            isTablet: '(min-width: 641px) and (max-width: 1024px)',
+            isDesktop: '(min-width: 1025px)',
+          },
+          (context) => {
+            const { isMobile, isTablet } = context.conditions as {
+              isMobile: boolean
+              isTablet: boolean
+              isDesktop: boolean
+            }
+            const offset = isMobile ? 18 : isTablet ? 26 : 36
+
+            gsap.fromTo(
+              portfolioBracketLeftRef.current,
+              { x: -offset },
+              {
+                x: 0,
+                ease: 'sine.out',
+                scrollTrigger: {
+                  trigger: portfolioHeadingRef.current,
+                  start: 'top 92%',
+                  end: 'top 52%',
+                  scrub: 0.8,
+                  invalidateOnRefresh: true,
+                },
+              }
+            )
+
+            gsap.fromTo(
+              portfolioBracketRightRef.current,
+              { x: offset },
+              {
+                x: 0,
+                ease: 'sine.out',
+                scrollTrigger: {
+                  trigger: portfolioHeadingRef.current,
+                  start: 'top 92%',
+                  end: 'top 52%',
+                  scrub: 0.8,
+                  invalidateOnRefresh: true,
+                },
+              }
+            )
+          }
+        )
+      }
+
+      // 12. 3D Elliptical Orbit Carousel (initPortfolioOrbit)
+      if (portfolioOrbitRef.current && portfolioListRef.current) {
+        measureOrbit()
+
+        // Gyro continuous gentle orbit tilt/rotation
+        const gyroTween = gsap.to(orbitRotationRef.current, {
+          rotation: 360,
+          duration: 36,
+          ease: 'none',
+          repeat: -1,
+          onUpdate: updateOrbitPositions,
+        })
+
+        // Viewport intersection trigger for video playback & gyro tween
+        ScrollTrigger.create({
+          trigger: portfolioOrbitRef.current,
+          start: 'top bottom',
+          end: 'bottom top',
+          onToggle: ({ isActive }) => {
+            isOrbitInViewRef.current = isActive
+            if (isActive) {
+              gyroTween.play()
+              const activeVideo = orbitVideosRef.current[orbitActiveIndexRef.current]
+              if (activeVideo) activeVideo.play().catch(() => {})
+            } else {
+              gyroTween.pause()
+              orbitVideosRef.current.forEach((v) => {
+                if (v) v.pause()
+              })
+            }
+          },
+        })
+      }
     },
     { scope: containerRef }
   )
@@ -452,7 +850,9 @@ export default function App() {
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 1376 165"
-              className="w-full h-auto text-[#080912] block"
+              className={`w-full h-auto block transition-colors duration-500 ${
+                isBrandWhite ? 'text-white' : 'text-[#080912]'
+              }`}
               fill="none"
             >
               {/* Letter A */}
@@ -811,57 +1211,256 @@ export default function App() {
       </div>
 
       {/* ==========================================================================
-          5. Services Showcase Section (Seamless Dark Blue Flow)
+          5. Services Showcase Section (Authentic Scroll-Pinned Showcase)
           ========================================================================== */}
-      <section data-theme-section="dark" data-services="" className="services py-20 sm:py-28">
-        <div className="max-w-7xl mx-auto px-6 sm:px-12">
-          <div className="services-list divide-y divide-[#e2e1e1]/20">
-            {servicesData.map((service, index) => {
-              const isActive = activeService === index
-              return (
-                <div
-                  key={index}
-                  data-services-item=""
-                  className="service-item group py-8 sm:py-10 transition-all duration-300"
-                >
-                  <div
-                    onClick={() => setActiveService(index)}
-                    className="flex items-center justify-between cursor-pointer select-none"
-                  >
-                    <span className="font-bold text-2xl sm:text-4xl md:text-5xl opacity-80 group-hover:opacity-100 transition-opacity">
-                      {service.number}
-                    </span>
-                    <h3 className="text-xl sm:text-3xl md:text-4xl font-bold uppercase tracking-tight text-right group-hover:translate-x-[-8px] transition-transform">
-                      {service.title[language]}
-                    </h3>
+      <section
+        id="services-showcase"
+        ref={servicesRef}
+        data-theme-section="light"
+        data-services=""
+        className="services"
+      >
+        <div className="services-wrapper">
+          <div className="services-sticky">
+            <div ref={servicesListRef} data-services-list="" className="services-list">
+              {servicesData.map((service, index) => (
+                <div key={index} data-services-item="" className="service-item">
+                  <div data-services-row="" className="service-row">
+                    <div className="service-number">{service.number}</div>
+                    <div className="service-title">{service.title[language]}</div>
                   </div>
-
-                  {/* Expandable Visual & Description */}
-                  <div
-                    className={`grid grid-cols-1 lg:grid-cols-12 gap-8 items-center mt-6 transition-all duration-500 overflow-hidden ${isActive
-                        ? 'max-h-[800px] opacity-100'
-                        : 'max-h-0 opacity-0 lg:max-h-none lg:opacity-100 hidden lg:grid'
-                      }`}
-                  >
-                    <div className="lg:col-span-5 text-sm sm:text-base md:text-lg text-[#e2e1e1]/85 leading-relaxed">
+                  <div data-services-visual="" className="service-visual">
+                    <div className="service-description">
                       <p>{service.description[language]}</p>
                     </div>
-                    <div className="lg:col-span-7">
-                      <div className="service-image-wrap aspect-video max-h-[420px] overflow-hidden rounded-xl border border-white/10 shadow-2xl">
-                        <img
-                          src={service.image}
-                          alt={service.imageAlt}
-                          className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
-                          loading="lazy"
-                        />
-                      </div>
+                    <div data-services-image-wrap="" className="service-image-wrap">
+                      <img
+                        src={service.image}
+                        alt={service.imageAlt}
+                        className="service-image"
+                        loading="lazy"
+                      />
                     </div>
                   </div>
                 </div>
-              )
-            })}
+              ))}
+            </div>
           </div>
         </div>
+      </section>
+
+      {/* ==========================================================================
+          6. Portfolio Showcase Section (Authentic 3D Orbit Carousel)
+          ========================================================================== */}
+      <section
+        id="portfolio"
+        ref={portfolioRef}
+        data-theme-section="dark"
+        className="portfolio"
+      >
+        <div className="portfolio-header-w">
+          <h2
+            ref={portfolioHeadingRef}
+            data-bracket-heading=""
+            className="heading-h2 text-3xl sm:text-4xl md:text-5xl lg:text-[3.85rem] font-bold text-[#080912] flex items-center justify-center tracking-tight select-none"
+          >
+            <span
+              ref={portfolioBracketLeftRef}
+              data-bracket-left=""
+              className="heading-bracket is--left inline-block will-change-transform mr-2 sm:mr-3 font-bold"
+            >
+              [
+            </span>
+            <span>{language === 'en' ? 'Portfolio' : 'Proyectos'}</span>
+            <span
+              ref={portfolioBracketRightRef}
+              data-bracket-right=""
+              className="heading-bracket is--right inline-block will-change-transform ml-2 sm:ml-3 font-bold"
+            >
+              ]
+            </span>
+          </h2>
+          <p className="portfolio-header__p">
+            {language === 'en'
+              ? 'Transforming ideas into dynamic digital experiences.'
+              : 'Transformando ideas en experiencias digitales dinámicas.'}
+          </p>
+        </div>
+
+        <div
+          ref={portfolioOrbitRef}
+          data-portfolio-orbit-init=""
+          className="portfolio-orbit"
+        >
+          <div className="portfolio-orbit__content">
+            {/* Orbit Counter & Details */}
+            <div className="portfolio-orbit__info">
+              <div className="portfolio-orbit__count">
+                <div className="portfolio-orbit__count-col overflow-hidden">
+                  <p ref={currentCountRef} className="portfolio-orbit__count-txt">
+                    {String(activeOrbitIndex + 1).padStart(2, '0')}
+                  </p>
+                </div>
+                <div className="portfolio-orbit__count-divider" />
+                <div className="portfolio-orbit__count-col">
+                  <p className="portfolio-orbit__count-txt">
+                    {String(portfolioProjects.length).padStart(2, '0')}
+                  </p>
+                </div>
+              </div>
+
+              <div className="portfolio-orbit__info-bottom">
+                <div className="portfolio-orbit__description relative">
+                  {portfolioProjects.map((project, index) => {
+                    const isActive = index === activeOrbitIndex
+                    return (
+                      <div
+                        key={index}
+                        className={`portfolio-orbit__content-item ${
+                          isActive ? 'active' : ''
+                        }`}
+                        style={{
+                          opacity: isActive ? 1 : 0,
+                          transform: isActive ? 'translateY(0)' : 'translateY(16px)',
+                          pointerEvents: isActive ? 'auto' : 'none',
+                          position: isActive ? 'relative' : 'absolute',
+                          top: 0,
+                          left: 0,
+                          width: '100%',
+                          transition: 'opacity 0.4s ease, transform 0.4s ease',
+                        }}
+                      >
+                        <h3>{project.title}</h3>
+                        <p>{project.description[language]}</p>
+                      </div>
+                    )
+                  })}
+                </div>
+
+                {/* Interactive Prev/Next Navigation with scale(1.4) corner borders on hover */}
+                <div className="portfolio-orbit__overlay-nav">
+                  <button
+                    onClick={() => handleOrbitStep(-1)}
+                    aria-label={language === 'en' ? 'Previous project' : 'Proyecto anterior'}
+                    className="portfolio-orbit__btn"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 17 12"
+                      fill="none"
+                      className="portfolio-orbit__btn-arrow"
+                    >
+                      <path
+                        d="M6.28871 12L7.53907 10.9111L3.48697 6.77778H16.5V5.22222H3.48697L7.53907 1.08889L6.28871 0L0.5 6L6.28871 12Z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                    <div className="portfolio-orbit__btn-overlay">
+                      <div className="portfolio-orbit__btn-overlay-corner" />
+                      <div className="portfolio-orbit__btn-overlay-corner top-right" />
+                      <div className="portfolio-orbit__btn-overlay-corner bottom-left" />
+                      <div className="portfolio-orbit__btn-overlay-corner bottom-right" />
+                    </div>
+                  </button>
+
+                  <button
+                    onClick={() => handleOrbitStep(1)}
+                    aria-label={language === 'en' ? 'Next project' : 'Proyecto siguiente'}
+                    className="portfolio-orbit__btn"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 17 12"
+                      fill="none"
+                      className="portfolio-orbit__btn-arrow next"
+                    >
+                      <path
+                        d="M6.28871 12L7.53907 10.9111L3.48697 6.77778H16.5V5.22222H3.48697L7.53907 1.08889L6.28871 0L0.5 6L6.28871 12Z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                    <div className="portfolio-orbit__btn-overlay">
+                      <div className="portfolio-orbit__btn-overlay-corner" />
+                      <div className="portfolio-orbit__btn-overlay-corner top-right" />
+                      <div className="portfolio-orbit__btn-overlay-corner bottom-left" />
+                      <div className="portfolio-orbit__btn-overlay-corner bottom-right" />
+                    </div>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* 3D Orbit Carousel Tiles */}
+            <div className="portfolio-orbit__collection">
+              <div ref={portfolioListRef} className="portfolio-orbit__list">
+                {portfolioProjects.map((project, index) => {
+                  const isActive = index === activeOrbitIndex
+                  return (
+                    <div
+                      key={index}
+                      ref={(el) => {
+                        orbitItemsRef.current[index] = el
+                      }}
+                      className="portfolio-orbit__item"
+                      data-orbit-tiles-item-status={isActive ? 'active' : 'not-active'}
+                    >
+                      <a
+                        ref={(el) => {
+                          orbitCardsRef.current[index] = el
+                        }}
+                        href={project.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => handleCardClick(e, index)}
+                        className="portfolio-orbit__card"
+                        aria-label={project.title}
+                      >
+                        <div className="portfolio-orbit__image-mask">
+                          <img
+                            src={project.placeholder}
+                            alt={project.title}
+                            className="portfolio-orbit__placeholder"
+                            draggable="false"
+                            loading="lazy"
+                          />
+                          <video
+                            ref={(el) => {
+                              orbitVideosRef.current[index] = el
+                            }}
+                            muted
+                            loop
+                            playsInline
+                            preload="metadata"
+                            className="portfolio-orbit__video"
+                          >
+                            <source src={project.video} type="video/mp4" />
+                          </video>
+                        </div>
+                      </a>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Authentic Call to Action */}
+        <div className="portfolio-cta">
+          <ScribbleButton
+            variant="dark"
+            size="lg"
+            weight="normal"
+            onClick={() =>
+              showNotification(
+                language === 'en' ? 'Quote Request opened' : 'Cotización solicitada'
+              )
+            }
+            className="shadow-lg"
+          >
+            {language === 'en' ? "LET'S TALK" : 'COTIZA AQUÍ'}
+          </ScribbleButton>
+         </div>
       </section>
     </div>
   )
