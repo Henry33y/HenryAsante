@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -49,8 +49,8 @@ const servicesData = [
     number: '[04]',
     title: { en: 'Custom code', es: 'Código personalizado' },
     description: {
-      en: "Webflow and Shopify are incredibly powerful, but some projects demand more. That's where custom code makes the difference, creating the kind of polished experiences often seen on Awwwards.",
-      es: 'Webflow y Shopify son plataformas increíbles, pero hay proyectos que piden ir más allá. Ahí entra el código personalizado, el detalle que separa un sitio bueno de uno digno de un reconocimiento como Awwwards.',
+      en: 'Webflow and Shopify are incredibly powerful, but some projects demand more. That\'s where custom code makes the difference, creating the kind of polished experiences often seen on <a href="https://www.awwwards.com/" data-underline-link="" target="_blank" rel="noopener noreferrer" class="underline hover:text-white transition-colors">Awwwards</a>.',
+      es: 'Webflow y Shopify son plataformas increíbles, pero hay proyectos que piden ir más allá. Ahí entra el código personalizado, el detalle que separa un sitio bueno de uno digno de un reconocimiento como <a href="https://www.awwwards.com/" data-underline-link="" target="_blank" rel="noopener noreferrer" class="underline hover:text-white transition-colors">Awwwards</a>.',
     },
     image: '/images/aha-img__05.avif',
     imageAlt: 'Developer working with custom code and animations',
@@ -128,7 +128,9 @@ export default function App() {
   const servicesBracketRightRef = useRef<HTMLSpanElement>(null)
   const servicesRef = useRef<HTMLElement>(null)
   const servicesListRef = useRef<HTMLDivElement>(null)
+  const drawTlRef = useRef<gsap.core.Timeline | null>(null)
   const [isBrandWhite, setIsBrandWhite] = useState(false)
+  const isBrandWhiteRef = useRef(false)
 
   // Portfolio Orbit Refs & State
   const portfolioRef = useRef<HTMLElement>(null)
@@ -145,16 +147,87 @@ export default function App() {
   const orbitCardsRef = useRef<(HTMLAnchorElement | null)[]>([])
   const orbitItemsRef = useRef<(HTMLDivElement | null)[]>([])
   const orbitVideosRef = useRef<(HTMLVideoElement | null)[]>([])
-  const orbitPlaceholdersRef = useRef<(HTMLImageElement | null)[]>([])
   const isOrbitInViewRef = useRef(false)
   const orbitWidthRef = useRef<number>(360)
   const orbitStepTweenRef = useRef<gsap.core.Tween | null>(null)
   const orbitRotationRef = useRef<{ rotation: number }>({ rotation: 0 })
 
+  // Certifications Section Refs
+  const certificationRef = useRef<HTMLElement>(null)
+  const certifiedHeadingRef = useRef<HTMLHeadingElement>(null)
+
   const lenisRef = useRef<Lenis | null>(null)
   const [language, setLanguage] = useState<'en' | 'es'>('en')
   const [copiedNotification, setCopiedNotification] = useState<string | null>(null)
   const [isScrolled, setIsScrolled] = useState(false)
+
+  // Continuous real-time detection of section background under header
+  const checkTheme = useCallback(() => {
+    const navY = 50 // Vertical center checkpoint of the fixed header
+
+    // 1. If certifications section is reaching or has reached the header -> background is light silver -> black text
+    if (certificationRef.current) {
+      const certRect = certificationRef.current.getBoundingClientRect()
+      if (certRect.top <= navY && certRect.bottom >= 0) {
+        if (isBrandWhiteRef.current) {
+          isBrandWhiteRef.current = false
+          setIsBrandWhite(false)
+        }
+        return
+      }
+    }
+
+    // 2. If portfolio is reaching or has reached the header -> background is light silver -> black text
+    if (portfolioRef.current) {
+      const portRect = portfolioRef.current.getBoundingClientRect()
+      if (portRect.top <= navY) {
+        if (isBrandWhiteRef.current) {
+          isBrandWhiteRef.current = false
+          setIsBrandWhite(false)
+        }
+        return
+      }
+    }
+
+    // 2. If services showcase is active under the header -> background is 100% purple -> white text
+    if (servicesRef.current) {
+      const servRect = servicesRef.current.getBoundingClientRect()
+      if (servRect.top <= navY && servRect.bottom >= 0) {
+        if (!isBrandWhiteRef.current) {
+          isBrandWhiteRef.current = true
+          setIsBrandWhite(true)
+        }
+        return
+      }
+    }
+
+    // 3. If scroll draw transition is active under the header
+    if (scrollDrawTransitionRef.current) {
+      const transRect = scrollDrawTransitionRef.current.getBoundingClientRect()
+      if (transRect.top <= navY && transRect.bottom >= 0) {
+        // The header text should ONLY turn white once the purple ink scribble has expanded and covered the header
+        const isScribbleCoveringHeader = drawTlRef.current ? drawTlRef.current.progress() >= 0.35 : false
+        if (isScribbleCoveringHeader) {
+          if (!isBrandWhiteRef.current) {
+            isBrandWhiteRef.current = true
+            setIsBrandWhite(true)
+          }
+        } else {
+          if (isBrandWhiteRef.current) {
+            isBrandWhiteRef.current = false
+            setIsBrandWhite(false)
+          }
+        }
+        return
+      }
+    }
+
+    // 4. Fallback (Hero or About section) -> background is light silver -> black text
+    if (isBrandWhiteRef.current) {
+      isBrandWhiteRef.current = false
+      setIsBrandWhite(false)
+    }
+  }, [])
 
   // Initialize Lenis Smooth Scrolling and link to GSAP ScrollTrigger
   useEffect(() => {
@@ -165,7 +238,15 @@ export default function App() {
     })
     lenisRef.current = lenis
 
-    lenis.on('scroll', ScrollTrigger.update)
+    const handleScroll = () => {
+      ScrollTrigger.update()
+      checkTheme()
+    }
+
+    lenis.on('scroll', handleScroll)
+    window.addEventListener('scroll', checkTheme, { passive: true })
+    window.addEventListener('resize', checkTheme)
+    ScrollTrigger.addEventListener('refresh', checkTheme)
 
     const tickerHandler = (time: number) => {
       lenis.raf(time * 1000)
@@ -174,11 +255,17 @@ export default function App() {
     gsap.ticker.add(tickerHandler)
     gsap.ticker.lagSmoothing(0)
 
+    // Initial check
+    checkTheme()
+
     return () => {
       lenis.destroy()
       gsap.ticker.remove(tickerHandler)
+      window.removeEventListener('scroll', checkTheme)
+      window.removeEventListener('resize', checkTheme)
+      ScrollTrigger.removeEventListener('refresh', checkTheme)
     }
-  }, [])
+  }, [checkTheme])
 
   const showNotification = (msg: string) => {
     setCopiedNotification(msg)
@@ -612,7 +699,7 @@ export default function App() {
         }
         updateHeight()
 
-        gsap.set(pathEl, { strokeWidth: '5%', drawSVG: '0% 0%' })
+        gsap.set(pathEl, { strokeWidth: 0, drawSVG: '0% 0%' })
 
         const drawTl = gsap.timeline({
           scrollTrigger: {
@@ -624,35 +711,24 @@ export default function App() {
             anticipatePin: 1,
             invalidateOnRefresh: true,
             onRefreshInit: updateHeight,
+            onUpdate: checkTheme,
           },
         })
+        drawTlRef.current = drawTl
 
         drawTl
+          .to(pathEl, { strokeWidth: '5%', duration: 0.05, ease: 'none' }, 0)
           .to(pathEl, { drawSVG: '0% 85%', duration: 1, ease: 'none' }, 0)
           .to(pathEl, { strokeWidth: '80%', duration: 0.75, ease: 'none' }, 0.25)
-      }
-
-      // 9. Brand theme toggle on dark sections (Services & Ink screen fill)
-      if (scrollDrawTransitionRef.current && servicesRef.current) {
-        ScrollTrigger.create({
-          trigger: scrollDrawTransitionRef.current,
-          start: 'top 60px',
-          endTrigger: servicesRef.current,
-          end: 'bottom 60px',
-          onEnter: () => setIsBrandWhite(true),
-          onLeave: () => setIsBrandWhite(false),
-          onEnterBack: () => setIsBrandWhite(true),
-          onLeaveBack: () => setIsBrandWhite(false),
-        })
       }
 
       // 10. Services Section Fullscreen Scroll-Pinned Showcase (from alejandroha.com)
       if (servicesRef.current && servicesListRef.current) {
         const servicesEl = servicesRef.current
         const listEl = servicesListRef.current
-        const rows = servicesEl.querySelectorAll<HTMLElement>('[data-services-row]')
-        const visuals = servicesEl.querySelectorAll<HTMLElement>('[data-services-visual]')
-        const imageWraps = servicesEl.querySelectorAll<HTMLElement>('[data-services-image-wrap]')
+        const rows = Array.from(servicesEl.querySelectorAll<HTMLElement>('[data-services-row]'))
+        const visuals = Array.from(servicesEl.querySelectorAll<HTMLElement>('[data-services-visual]'))
+        const imageWraps = Array.from(servicesEl.querySelectorAll<HTMLElement>('[data-services-image-wrap]'))
 
         const mmServices = gsap.matchMedia()
         mmServices.add('(min-width: 992px)', () => {
@@ -684,21 +760,32 @@ export default function App() {
               anticipatePin: 1,
               invalidateOnRefresh: true,
               onRefreshInit: updateHeights,
+              onUpdate: checkTheme,
             },
           })
 
           for (let i = 0; i < servicesData.length - 1; i++) {
             const nextIdx = i + 1
-            let prevRowsOffset = 0
-            for (let r = 0; r <= nextIdx - 2; r++) {
-              prevRowsOffset += (rows[r]?.offsetHeight || 60)
-            }
-
             servicesTl
               .to(visuals[i], { height: 0, duration: 1, ease: 'none' }, i)
               .to(imageWraps[i], { left: '100%', width: '0%', duration: 1, ease: 'none' }, i)
               .to(imageWraps[nextIdx], { left: '29%', width: '71%', duration: 1, ease: 'none' }, i)
-              .to(listEl, { y: -prevRowsOffset, duration: 1, ease: 'none' }, i)
+              .to(
+                listEl,
+                {
+                  y: () => {
+                    if (nextIdx < 2) return 0
+                    let sum = 0
+                    for (let r = 0; r <= nextIdx - 2; r++) {
+                      sum += (rows[r]?.offsetHeight || 0)
+                    }
+                    return -sum
+                  },
+                  duration: 1,
+                  ease: 'none',
+                },
+                i
+              )
           }
 
           return () => {
@@ -707,7 +794,61 @@ export default function App() {
             })
           }
         })
+
+        mmServices.add('(min-width: 768px) and (max-width: 991px)', () => {
+          let scrollHeights: number[] = []
+          const calcHeights = () => {
+            scrollHeights = visuals.map((v) => v.scrollHeight)
+          }
+          const resetStates = () => {
+            gsap.set(listEl, { y: 0 })
+            visuals.forEach((visual, o) => {
+              gsap.set(visual, { height: o === 0 ? scrollHeights[o] : 0, overflow: 'hidden' })
+              gsap.set(imageWraps[o], { clearProps: 'transform,width,left,top,clipPath,opacity,visibility' })
+            })
+          }
+          calcHeights()
+
+          const tabletTl = gsap.timeline({
+            scrollTrigger: {
+              trigger: servicesEl,
+              start: 'top top',
+              end: () => `+=${window.innerHeight * (servicesData.length - 1)}`,
+              scrub: true,
+              pin: true,
+              anticipatePin: 1,
+              invalidateOnRefresh: true,
+              onRefreshInit: () => {
+                calcHeights()
+                resetStates()
+              },
+              onUpdate: checkTheme,
+            },
+          })
+          resetStates()
+
+          for (let i = 0; i < servicesData.length - 1; i++) {
+            const nextIdx = i + 1
+            tabletTl
+              .to(visuals[i], { height: 0, duration: 1, ease: 'none' }, i)
+              .to(visuals[nextIdx], { height: () => scrollHeights[nextIdx], duration: 1, ease: 'none' }, i)
+          }
+
+          return () => {
+            gsap.set([listEl, ...visuals, ...imageWraps], {
+              clearProps: 'transform,height,width,left,top,zIndex,overflow,opacity',
+            })
+          }
+        })
+
+        mmServices.add('(max-width: 767px)', () => {
+          gsap.set([listEl, ...visuals, ...imageWraps], {
+            clearProps: 'transform,height,width,left,top,zIndex,overflow,opacity',
+          })
+        })
       }
+
+
 
       // 11. Bracket Closing Parallax ([ Portfolio ] / [ Proyectos ])
       if (portfolioHeadingRef.current && portfolioBracketLeftRef.current && portfolioBracketRightRef.current) {
@@ -796,6 +937,45 @@ export default function App() {
       }
     },
     { scope: containerRef }
+  )
+
+  // Authentic Random Scatter & Assemble Scroll Animation for Certifications Heading (initSplitRandom)
+  useGSAP(
+    () => {
+      if (!certifiedHeadingRef.current) return
+      const headingEl = certifiedHeadingRef.current
+      const chars = Array.from(headingEl.querySelectorAll<HTMLElement>('.split-char'))
+      if (!chars.length) return
+
+      const fontSize = parseFloat(window.getComputedStyle(headingEl).fontSize) || 48
+      const maxDist = Math.min(3 * fontSize, 0.2 * Math.min(window.innerWidth, window.innerHeight))
+
+      chars.forEach((ch) => {
+        gsap.set(ch, {
+          x: gsap.utils.random(-maxDist, maxDist),
+          y: gsap.utils.random(-maxDist, maxDist),
+          rotation: gsap.utils.random(-90, 90),
+          scale: gsap.utils.random(0.5, 1.4),
+          filter: 'blur(8px)',
+        })
+      })
+
+      gsap.to(chars, {
+        x: 0,
+        y: 0,
+        rotation: 0,
+        scale: 1,
+        filter: 'blur(0px)',
+        stagger: { each: 0.03, from: 'random' },
+        scrollTrigger: {
+          trigger: headingEl,
+          start: 'top bottom',
+          end: 'top 20%',
+          scrub: true,
+        },
+      })
+    },
+    { scope: containerRef, dependencies: [language] }
   )
 
   // Subtle interactive mouse parallax in hero
@@ -1220,24 +1400,25 @@ export default function App() {
         data-services=""
         className="services"
       >
-        <div className="services-wrapper">
-          <div className="services-sticky">
+        <div data-services-wrapper="" className="services-wrapper">
+          <div data-services-sticky="" className="services-sticky">
             <div ref={servicesListRef} data-services-list="" className="services-list">
               {servicesData.map((service, index) => (
                 <div key={index} data-services-item="" className="service-item">
                   <div data-services-row="" className="service-row">
                     <div className="service-number">{service.number}</div>
-                    <div className="service-title">{service.title[language]}</div>
+                    <h3 className="service-title">{service.title[language]}</h3>
                   </div>
                   <div data-services-visual="" className="service-visual">
                     <div className="service-description">
-                      <p>{service.description[language]}</p>
+                      <p dangerouslySetInnerHTML={{ __html: service.description[language] }} />
                     </div>
                     <div data-services-image-wrap="" className="service-image-wrap">
                       <img
                         src={service.image}
                         alt={service.imageAlt}
                         className="service-image"
+                        draggable={false}
                         loading="lazy"
                       />
                     </div>
@@ -1262,6 +1443,7 @@ export default function App() {
           <h2
             ref={portfolioHeadingRef}
             data-bracket-heading=""
+            style={{ fontFamily: 'var(--body-font)' }}
             className="heading-h2 text-3xl sm:text-4xl md:text-5xl lg:text-[3.85rem] font-bold text-[#080912] flex items-center justify-center tracking-tight select-none"
           >
             <span
@@ -1281,9 +1463,17 @@ export default function App() {
             </span>
           </h2>
           <p className="portfolio-header__p">
-            {language === 'en'
-              ? 'Transforming ideas into dynamic digital experiences.'
-              : 'Transformando ideas en experiencias digitales dinámicas.'}
+            {language === 'en' ? (
+              <>
+                Crafting digital experiences that
+                <span className="block">bring ideas to life.</span>
+              </>
+            ) : (
+              <>
+                Diseñando experiencias digitales que
+                <span className="block">dan vida a las ideas.</span>
+              </>
+            )}
           </p>
         </div>
 
@@ -1330,8 +1520,12 @@ export default function App() {
                           transition: 'opacity 0.4s ease, transform 0.4s ease',
                         }}
                       >
-                        <h3>{project.title}</h3>
-                        <p>{project.description[language]}</p>
+                        <h3 className="portfolio-orbit__heading font-bold uppercase tracking-tight text-[#080912]">
+                          {project.title}
+                        </h3>
+                        <p className="portfolio-orbit__paragraph text-[#080912] leading-relaxed">
+                          {project.description[language]}
+                        </p>
                       </div>
                     )
                   })}
@@ -1450,17 +1644,176 @@ export default function App() {
           <ScribbleButton
             variant="dark"
             size="lg"
-            weight="normal"
+            weight="medium"
             onClick={() =>
               showNotification(
                 language === 'en' ? 'Quote Request opened' : 'Cotización solicitada'
               )
             }
-            className="shadow-lg"
+            className="shadow-sm"
           >
-            {language === 'en' ? "LET'S TALK" : 'COTIZA AQUÍ'}
+            {language === 'en' ? 'QUOTE YOUR PROJECT' : 'COTIZA TU PROYECTO'}
           </ScribbleButton>
-         </div>
+        </div>
+      </section>
+
+      {/* ==========================================================================
+          7. Certifications & Partnerships Section (Authentic alejandroha.com)
+          ========================================================================== */}
+      <section
+        id="certifications"
+        ref={certificationRef}
+        data-theme-section="dark"
+        className="certification"
+      >
+        <div className="certification-header-w">
+          <h2
+            ref={certifiedHeadingRef}
+            data-split-random=""
+            className="certified-big-txt select-none"
+          >
+            {(language === 'en'
+              ? 'Certifications & Partnerships'
+              : 'Certificaciones & Partnerships'
+            )
+              .split('')
+              .map((char, index) => (
+                <span
+                  key={index}
+                  className="split-char"
+                  style={char === ' ' ? { width: '0.28em' } : undefined}
+                >
+                  {char === ' ' ? '\u00A0' : char}
+                </span>
+              ))}
+          </h2>
+        </div>
+
+        <div className="certification-content-w">
+          <p>
+            {language === 'en'
+              ? 'I am an Official Webflow and Shopify Partner in Mexico, ensuring that every project meets the highest standards of quality, performance, and support.'
+              : 'Soy Partner Oficial de Webflow y Shopify en México, lo que garantiza que cada proyecto cumple con los más altos estándares de calidad, rendimiento y soporte.'}
+          </p>
+        </div>
+
+        <div className="certifications-logos">
+          {/* Webflow Partner / Expert SVG */}
+          <div className="certifications-logo" aria-label="Webflow Certified Partner">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="100%"
+              viewBox="0 0 400 45"
+              fill="none"
+              className="w-full h-auto"
+            >
+              <g clipPath="url(#clip0_webflow_cert)">
+                <path
+                  fillRule="evenodd"
+                  clipRule="evenodd"
+                  d="M71.9788 0L49.0123 45H27.4358L37.0479 26.3527H36.6202C28.6868 36.673 16.8614 43.4675 0 45V26.6099C0 26.6099 10.7883 25.9669 17.1287 19.2903H0V0H19.2457V15.8716H19.6734L27.5427 0H42.0946V15.7645H42.5223L50.691 0H71.9788Z"
+                  fill="currentColor"
+                />
+                <path
+                  d="M98.6448 37.0052C95.9718 37.0052 93.5874 36.3944 91.4918 35.1834C89.3961 33.9509 87.7603 32.2255 86.5841 30.0071C85.408 27.7887 84.8306 25.2488 84.8413 22.3767C84.8306 19.4939 85.408 16.9433 86.5841 14.7249C87.7603 12.4958 89.3961 10.7704 91.4918 9.54868C93.5874 8.31624 95.9718 7.70538 98.6448 7.70538C100.965 7.70538 103.061 8.14477 104.932 9.03427C106.824 9.90233 108.375 11.1669 109.572 12.8173C110.77 14.457 111.539 16.3753 111.86 18.5615H106.257C105.979 17.3184 105.466 16.236 104.739 15.3143C104.023 14.382 103.135 13.6639 102.088 13.1603C101.05 12.6566 99.9171 12.4101 98.6768 12.4101C97.041 12.4101 95.5868 12.8173 94.3252 13.6425C93.0635 14.4463 92.0692 15.6144 91.3528 17.1255C90.6471 18.6258 90.2943 20.3727 90.2943 22.3767C90.2943 24.3808 90.6471 26.1062 91.3528 27.6065C92.0692 29.1069 93.0635 30.2643 94.3252 31.0895C95.5868 31.8933 97.041 32.3005 98.6768 32.3005C99.9706 32.3005 101.147 32.054 102.205 31.5718C103.264 31.0681 104.14 30.3715 104.835 29.4713C105.541 28.5711 106.001 27.5208 106.236 26.2991H111.839C111.539 28.3889 110.812 30.2429 109.636 31.8611C108.46 33.4794 106.92 34.744 105.028 35.6442C103.135 36.5551 101.008 37.0052 98.6448 37.0052ZM125.546 37.0481C123.408 37.0481 121.526 36.5873 119.89 35.6656C118.265 34.744 117.003 33.4365 116.094 31.7432C115.185 30.05 114.736 28.0995 114.736 25.8811C114.736 23.6628 115.196 21.8409 116.116 20.1476C117.035 18.4437 118.307 17.1148 119.911 16.1717C121.536 15.2072 123.365 14.7249 125.396 14.7249C127.556 14.7249 129.47 15.2072 131.138 16.1717C132.806 17.1362 134.067 18.5508 134.934 20.437C135.8 22.3124 136.142 24.5415 135.949 27.1457H116.917V23.7378L132.089 23.6842L130.71 24.2843C130.689 23.2126 130.454 22.2481 130.015 21.4229C129.577 20.587 128.967 19.944 128.176 19.4832C127.396 19.0224 126.498 18.7866 125.492 18.7866C124.434 18.7866 123.482 19.0438 122.638 19.5582C121.793 20.0726 121.13 20.7906 120.638 21.7123C120.168 22.6339 119.933 23.6735 119.943 24.8309V26.7385C119.933 27.9816 120.157 29.0748 120.638 30.0286C121.119 30.9609 121.793 31.7004 122.648 32.2255C123.504 32.7399 124.477 32.9971 125.567 32.9971C126.359 32.9864 127.086 32.8471 127.749 32.5899C128.422 32.322 128.999 31.9469 129.459 31.4753C129.919 30.9931 130.25 30.4358 130.454 29.8035H135.714C135.415 31.2288 134.795 32.4934 133.854 33.5865C132.923 34.6904 131.726 35.5477 130.283 36.1586C128.839 36.7587 127.257 37.0588 125.546 37.0588V37.0481ZM139.659 15.1321H144.535V19.4939L143.829 19.5904C144.054 18.6044 144.471 17.7471 145.059 17.0183C145.658 16.2789 146.374 15.7109 147.208 15.3251C148.053 14.9285 148.962 14.7249 149.934 14.7249C150.106 14.7249 150.266 14.7249 150.416 14.7463C150.587 14.7571 150.726 14.7785 150.854 14.7999V19.6118C150.736 19.5689 150.555 19.5368 150.298 19.5153C150.041 19.4725 149.795 19.4618 149.55 19.4618C148.577 19.451 147.732 19.6332 146.994 20.019C146.267 20.3941 145.7 20.9514 145.283 21.6909C144.888 22.4196 144.685 23.2984 144.685 24.3272V36.5765H139.659V15.1321ZM157.43 9.91305H162.498V36.5658H157.43V9.91305ZM153.548 15.1321H166.379V19.3224H153.548V15.1321ZM169.447 15.1321H174.526V36.5765H169.447V15.1321ZM169.341 6.93377H174.772V12.2172H169.341V6.93377ZM181.112 13.9211C181.112 12.4851 181.444 11.2205 182.096 10.1381C182.748 9.04499 183.657 8.20907 184.844 7.61965C186.02 7.0195 187.399 6.71943 188.971 6.71943C189.345 6.70872 189.688 6.71943 190.008 6.77302C190.329 6.81588 190.596 6.85875 190.81 6.92305V11.2527L190.714 11.1991C190.543 11.1455 190.35 11.1133 190.115 11.0812C189.901 11.0383 189.688 11.0276 189.484 11.0276C188.768 11.0276 188.169 11.1562 187.677 11.4134C187.196 11.6706 186.822 12.0457 186.587 12.5494C186.341 13.0531 186.223 13.6425 186.223 14.3391V36.5873H181.123V13.9211H181.112ZM177.627 15.1321H190.521V19.301H177.627V15.1321ZM194.082 15.1321H199.161V36.5765H194.082V15.1321ZM193.964 6.93377H199.396V12.2172H193.964V6.93377ZM213.787 37.0481C211.649 37.0481 209.767 36.5873 208.131 35.6656C206.506 34.744 205.244 33.4365 204.336 31.7432C203.427 30.05 202.978 28.0995 202.978 25.8811C202.978 23.6628 203.437 21.8409 204.357 20.1476C205.277 18.4437 206.549 17.1148 208.153 16.1717C209.778 15.2072 211.606 14.7249 213.638 14.7249C215.797 14.7249 217.711 15.2072 219.379 16.1717C221.047 17.1362 222.309 18.5508 223.175 20.437C224.041 22.3124 224.383 24.5415 224.191 27.1457H205.159V23.7378L220.331 23.6842L218.952 24.2843C218.93 23.2126 218.695 22.2481 218.257 21.4229C217.818 20.587 217.209 19.944 216.418 19.4832C215.637 19.0224 214.739 18.7866 213.734 18.7866C212.675 18.7866 211.724 19.0438 210.879 19.5582C210.034 20.0726 209.372 20.7906 208.88 21.7123C208.409 22.6339 208.174 23.6735 208.185 24.8309V26.7385C208.174 27.9816 208.399 29.0748 208.88 30.0286C209.361 30.9609 210.034 31.7004 210.89 32.2255C211.745 32.7399 212.718 32.9971 213.809 32.9971C214.6 32.9864 215.327 32.8471 216.001 32.5899C216.674 32.322 217.252 31.9469 217.711 31.4753C218.171 30.9931 218.503 30.4358 218.706 29.8035H223.966C223.667 31.2288 223.047 32.4934 222.106 33.5865C221.176 34.6904 219.978 35.5477 218.535 36.1586C217.091 36.7587 215.509 37.0588 213.798 37.0588L213.787 37.0481ZM236.593 36.9731C234.744 36.9731 233.087 36.5015 231.622 35.5692C230.178 34.6368 229.045 33.3293 228.222 31.6468C227.398 29.9535 226.992 28.0138 226.992 25.8168C226.992 23.6199 227.409 21.648 228.243 19.9762C229.077 18.2829 230.221 16.9862 231.675 16.0752C233.129 15.1643 234.797 14.7142 236.679 14.7249C237.855 14.7142 238.978 14.9392 240.058 15.4001C241.148 15.8609 242.057 16.4932 242.784 17.3077C243.522 18.1114 244.003 19.0009 244.206 19.9762L243.287 19.9547V6.85875H248.408V36.5658H243.34V31.7432L244.302 31.6682C244.024 32.6863 243.49 33.5865 242.709 34.401C241.94 35.1941 241.02 35.8264 239.929 36.2872C238.839 36.748 237.727 36.9838 236.593 36.9838V36.9731ZM237.748 32.5899C238.807 32.5899 239.769 32.3005 240.624 31.7218C241.49 31.1324 242.175 30.3286 242.656 29.2998C243.158 28.271 243.404 27.1029 243.404 25.7954C243.415 24.4772 243.18 23.2984 242.699 22.2803C242.228 21.2407 241.555 20.4477 240.689 19.9011C239.833 19.3331 238.85 19.0545 237.748 19.0545C236.647 19.0545 235.685 19.3331 234.872 19.9011C234.059 20.4691 233.418 21.2622 232.958 22.2803C232.509 23.3091 232.285 24.4772 232.285 25.7954C232.285 27.1136 232.509 28.3031 232.958 29.332C233.418 30.3393 234.059 31.1431 234.872 31.7111C235.706 32.2898 236.658 32.5792 237.748 32.5792V32.5899ZM262.607 8.14477H273.674C275.63 8.14477 277.352 8.5413 278.838 9.33434C280.335 10.1274 281.479 11.2419 282.291 12.6566C283.115 14.0819 283.521 15.6894 283.521 17.5006C283.521 19.3117 283.115 20.9407 282.291 22.366C281.489 23.7806 280.335 24.8845 278.838 25.6882C277.341 26.4813 275.609 26.8778 273.641 26.8778H266.082V22.3982H272.925C273.973 22.3982 274.871 22.1945 275.63 21.7873C276.4 21.3801 276.977 20.8121 277.373 20.0726C277.779 19.3439 277.993 18.4972 278.004 17.5542C278.004 16.5896 277.801 15.743 277.394 15.0143C276.999 14.2748 276.411 13.6961 275.63 13.2996C274.86 12.8923 273.952 12.6887 272.904 12.6887H267.878V36.5551H262.607V8.14477ZM295.336 36.9731C293.475 36.9731 291.829 36.5015 290.364 35.5692C288.91 34.6261 287.766 33.3079 286.932 31.6254C286.098 29.9321 285.691 27.9924 285.702 25.7954C285.702 23.5877 286.119 21.648 286.953 19.9654C287.798 18.2829 288.952 16.9862 290.428 16.0859C291.903 15.1643 293.571 14.7035 295.432 14.7249C296.672 14.7142 297.827 14.9392 298.885 15.4215C299.944 15.8823 300.821 16.5146 301.516 17.3077C302.221 18.1007 302.67 18.9688 302.873 19.9011L301.954 19.8583V15.1321H307.054V36.5765H302.007V32.3863L302.948 31.829C302.638 32.7828 302.114 33.6401 301.377 34.4225C300.639 35.2048 299.73 35.8264 298.671 36.2872C297.624 36.748 296.512 36.9838 295.336 36.9838V36.9731ZM296.405 32.6113C297.506 32.6113 298.49 32.3327 299.356 31.7647C300.222 31.186 300.895 30.3822 301.366 29.3641C301.847 28.3246 302.093 27.135 302.093 25.8061C302.093 24.4772 301.868 23.2984 301.387 22.2696C300.906 21.2407 300.222 20.4477 299.356 19.8904C298.5 19.3224 297.517 19.0438 296.405 19.0438C295.293 19.0438 294.363 19.3224 293.55 19.8904C292.727 20.4584 292.096 21.2515 291.647 22.291C291.198 23.3198 290.973 24.4879 290.973 25.8061C290.973 27.1243 291.198 28.3139 291.647 29.3427C292.096 30.3715 292.727 31.1645 293.55 31.7432C294.384 32.322 295.336 32.6113 296.405 32.6113ZM311.737 15.1321H316.613V19.4939L315.907 19.5904C316.142 18.6044 316.549 17.7471 317.137 17.0183C317.735 16.2789 318.452 15.7109 319.286 15.3251C320.13 14.9285 321.039 14.7249 322.012 14.7249C322.173 14.7249 322.333 14.7249 322.493 14.7463C322.654 14.7571 322.803 14.7785 322.932 14.7999V19.6118C322.814 19.5689 322.632 19.5368 322.376 19.5153C322.119 19.4725 321.873 19.4618 321.627 19.4618C320.654 19.451 319.81 19.6332 319.072 20.019C318.345 20.3941 317.778 20.9514 317.361 21.6909C316.966 22.4196 316.773 23.2984 316.773 24.3272V36.5765H311.748V15.1321H311.737ZM329.497 9.91305H334.554V36.5658H329.497V9.91305ZM325.626 15.1321H338.457V19.3224H325.626V15.1321ZM346.55 36.5658H341.429V15.1321H346.433V19.5582L345.588 19.8904C345.834 18.883 346.294 17.9721 346.989 17.1791C347.684 16.386 348.529 15.7752 349.544 15.3572C350.549 14.9178 351.629 14.7142 352.773 14.7249C354.281 14.7249 355.607 15.0571 356.74 15.7109C357.873 16.3539 358.75 17.2862 359.37 18.4972C360.001 19.719 360.311 21.1443 360.311 22.784V36.5873H355.19V23.8021C355.19 22.8376 355.029 22.0124 354.708 21.3265C354.388 20.6299 353.928 20.1048 353.329 19.7511C352.73 19.3975 352.003 19.2153 351.159 19.2153C350.314 19.2153 349.512 19.4296 348.817 19.8476C348.122 20.2655 347.577 20.8764 347.171 21.6587C346.764 22.4303 346.561 23.3091 346.561 24.295V36.598L346.55 36.5658ZM374.692 37.0481C372.554 37.0481 370.672 36.5873 369.036 35.6656C367.411 34.744 366.149 33.4365 365.24 31.7432C364.331 30.05 363.882 28.0995 363.882 25.8811C363.882 23.6628 364.342 21.8409 365.262 20.1476C366.181 18.4437 367.453 17.1148 369.057 16.1717C370.682 15.2072 372.511 14.7249 374.542 14.7249C376.702 14.7249 378.616 15.2072 380.273 16.1717C381.941 17.1362 383.203 18.5508 384.069 20.437C384.935 22.3124 385.277 24.5415 385.085 27.1457H366.053V23.7378L381.225 23.6842L379.846 24.2843C379.824 23.2126 379.589 22.2481 379.151 21.4229C378.712 20.587 378.103 19.944 377.312 19.4832C376.531 19.0224 375.633 18.7866 374.628 18.7866C373.559 18.7866 372.618 19.0438 371.773 19.5582C370.928 20.0726 370.265 20.7906 369.774 21.7123C369.303 22.6339 369.068 23.6735 369.079 24.8309V26.7385C369.068 27.9816 369.292 29.0748 369.774 30.0286C370.255 30.9609 370.928 31.7004 371.784 32.2255C372.639 32.7399 373.612 32.9971 374.703 32.9971C375.494 32.9864 376.221 32.8471 376.884 32.5899C377.568 32.322 378.135 31.9469 378.595 31.4753C379.054 30.9931 379.386 30.4358 379.589 29.8035H384.849C384.55 31.2288 383.93 32.4934 382.989 33.5865C382.059 34.6904 380.872 35.5477 379.418 36.1586C377.974 36.7587 376.392 37.0588 374.681 37.0588L374.692 37.0481ZM388.816 15.1321H393.692V19.4939L392.986 19.5904C393.211 18.6044 393.628 17.7471 394.216 17.0183C394.814 16.2789 395.531 15.7109 396.365 15.3251C397.209 14.9285 398.118 14.7249 399.091 14.7249C399.252 14.7249 399.412 14.7249 399.572 14.7463C399.743 14.7571 399.882 14.7785 400.021 14.7999V19.6118C399.904 19.5689 399.722 19.5368 399.465 19.5153C399.209 19.4725 398.963 19.4618 398.717 19.4618C397.744 19.451 396.889 19.6332 396.162 20.019C395.434 20.3941 394.857 20.9514 394.451 21.6909C394.055 22.4196 393.852 23.2984 393.852 24.3272V36.5765H388.827V15.1321H388.816Z"
+                  fill="currentColor"
+                />
+              </g>
+              <defs>
+                <clipPath id="clip0_webflow_cert">
+                  <rect width="400" height="45" fill="currentColor" />
+                </clipPath>
+              </defs>
+            </svg>
+          </div>
+
+          {/* Shopify Partner SVG */}
+          <div className="certifications-logo" aria-label="Shopify Partner">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="100%"
+              viewBox="0 0 400 66"
+              fill="none"
+              className="w-full h-auto"
+            >
+              <g clipPath="url(#clip0_shopify_cert)">
+                <path
+                  d="M57.5034 60.2717C50.2073 60.787 43.5625 64.6259 36.9076 64.04C24.4117 62.9489 12.6587 59.4433 0 57.6855L5.19983 18.0026C7.96764 16.8105 10.6235 16.6085 13.0759 15.1537C14.3784 10.0923 16.5051 5.33403 20.321 2.14163C23.6689 -0.666884 26.9658 -0.444627 30.4968 1.33342C33.3053 2.74778 36.1647 3.68732 36.9381 7.54649L41.0084 7.74855C43.013 10.9005 45.8928 12.4058 50.1361 11.6986L57.5034 60.2818V60.2717ZM23.0889 53.6141C27.0371 51.5532 28.0343 47.2697 27.7595 43.5318C27.2304 36.359 18.6522 35.6316 19.1712 31.7421C19.6901 27.8526 25.2767 29.7216 27.6273 29.8125C29.347 28.2466 29.52 25.5189 30.2831 22.8418C24.6254 20.8819 17.9094 22.1043 14.3682 26.8121C10.2775 32.2472 11.7327 38.8644 17.3701 42.1781C18.3673 42.764 18.9168 44.1481 19.1 44.9563C19.3238 45.9463 18.9677 47.1889 17.7873 47.694C15.3756 48.7245 13.3812 46.3302 11.1221 46.0271C9.63647 45.8251 8.35432 50.2702 9.44313 51.3512C12.8825 54.786 18.6319 55.9377 23.0787 53.6141H23.0889Z"
+                  fill="currentColor"
+                />
+                <path
+                  d="M150.378 64.4644L142.186 64.6967L149.493 25.6605C151.752 25.3372 154.245 24.8927 156.27 25.7312C156.789 25.9433 156.504 27.4991 156.89 27.5193C157.399 27.5496 158.172 27.3173 158.783 26.8526C162.629 23.943 169.213 23.943 171.462 28.8933C174.464 35.5205 172.337 43.4612 167.931 49.0378C164.268 53.6748 158.691 54.6851 152.728 53.5334L150.388 64.4644H150.378ZM159.058 47.2395C164.573 43.2793 166.456 32.1968 161.459 31.6816C155.628 31.0855 153.085 46.2394 154.926 47.3405C155.873 47.8962 157.633 48.27 159.058 47.2395Z"
+                  fill="currentColor"
+                />
+                <path
+                  d="M104.149 53.3213L107.314 34.9347C107.517 33.7729 107.059 32.5404 106.459 32.0757C103.406 29.7016 99.7736 35.0458 99.0104 39.0161C98.0742 43.8249 96.9142 48.1993 96.3545 53.7153C94.0141 53.5234 91.4702 52.9476 87.9799 53.8366L95.5405 13.2445L103.681 13.5274L101.605 27.3679C105.503 25.4585 109.095 23.7714 112.748 25.7414C119.403 29.3278 112.687 46.2193 112.137 53.2809C109.43 53.6345 107.059 53.5234 104.149 53.3415V53.3213Z"
+                  fill="currentColor"
+                />
+                <path
+                  d="M223.674 47.1487C220.184 54.3518 214.333 64.3735 206.039 66C204.991 63.9189 203.974 61.7368 203.943 59.3728C206.395 57.5341 212.216 55.6853 212.135 51.7655C211.962 42.8349 208.644 34.4801 208.034 25.7616C210.659 25.4383 213.569 25.4282 216.225 25.7818L218.413 42.6732L225.292 25.8323C228.009 25.1655 230.573 25.8323 234.125 25.5797L223.664 47.1487H223.674Z"
+                  fill="currentColor"
+                />
+                <path
+                  d="M141.443 46.8758C137.302 53.7254 128.164 56.2813 121.621 51.8968C117.988 49.4621 117.418 44.8553 117.764 40.8446C118.477 32.6919 123.9 25.812 132.041 24.9331C138.208 24.2663 143.407 27.6002 144.201 33.6617C144.791 38.1472 143.998 42.6429 141.433 46.8758H141.443ZM135.928 34.2679C135.745 32.6211 134.361 31.4796 133.099 31.2169C131.838 30.9542 130.24 31.5705 129.253 32.8535C125.651 37.5108 124.277 46.8051 128.876 47.6335C134.025 48.563 136.518 39.4303 135.928 34.2679Z"
+                  fill="currentColor"
+                />
+                <path
+                  d="M199.842 32.0958L195.803 53.2809C193.086 53.5537 190.664 53.5537 187.703 53.2809L191.58 32.1766C190.318 31.328 189.087 31.8736 187.774 31.8938L189.524 25.5797C190.074 25.1453 191.803 25.5898 192.465 25.2362C193.167 24.8523 193.411 23.8319 193.594 22.8116C195.009 15.1336 202.183 10.9209 209.754 13.3253C209.55 15.1336 209.713 18.023 208.054 19.2656C206.803 20.0031 204.34 18.9827 203.455 20.1647C202.366 21.5993 200.392 23.8925 201.878 25.1251C202.936 26.004 204.951 24.822 206.365 25.6706C206.294 27.5598 205.877 29.3479 205.388 31.3381L199.832 32.1059L199.842 32.0958Z"
+                  fill="currentColor"
+                />
+                <path
+                  d="M82.0271 52.2505C76.9392 54.7761 70.9456 54.5538 66.3767 51.9676C67.1501 49.6844 68.015 48.0882 67.842 45.896C70.7523 47.4012 74.0391 48.8257 77.1732 47.28C78.3027 46.7244 78.3333 45.0777 77.9669 44.421C76.2981 41.4104 70.2028 40.7234 69.8161 35.0054C69.5923 31.6615 71.3018 28.166 74.6496 26.5092C78.8624 24.428 83.818 24.4886 88.102 26.1253C87.756 27.9538 87.6645 30.8937 86.1279 31.4594C85.1002 31.8332 78.8217 29.3682 78.0178 33.1263C77.336 36.3288 86.1991 37.2684 86.5858 43.4814C86.7995 46.8759 85.5479 50.5027 82.0271 52.2505Z"
+                  fill="currentColor"
+                />
+                <path
+                  d="M243.334 52.7454C241.695 56.1399 242.703 66.3435 238.348 64.7776L245.247 26.9536C245.389 26.1858 245.359 25.5696 245.939 25.4079C246.315 25.2968 247.211 25.216 247.76 25.7716C248.096 26.1151 247.689 26.5697 247.74 27.6507C247.455 28.6912 247.862 29.4994 248.829 28.762C251.729 25.8625 255.687 23.9127 259.747 25.5494C266.392 28.2265 264.947 42.4004 257.193 50.0582C253.438 53.7658 248.564 54.281 243.334 52.7656V52.7454ZM255.361 47.8457C261.599 41.2285 263.461 29.3075 257.62 27.4183C251.973 25.5898 247.027 33.4091 245.806 39.0666C245.053 42.5722 244.249 45.8454 243.965 49.5025C247.689 51.8059 252.237 51.1593 255.361 47.8457Z"
+                  fill="currentColor"
+                />
+                <path
+                  d="M281.961 53.594C282.46 51.7958 283.09 49.8864 282.195 47.9164C279.987 51.0381 277.697 52.9879 274.278 53.5233C270.605 54.0991 267.125 52.0483 266.423 48.1892C265.069 40.6931 268.051 32.8737 274.064 28.0548C278.318 24.6502 283.864 24.0845 289.033 25.6099L285.655 44.138C285.034 47.5729 284.647 50.8057 285.36 53.8668C283.966 53.2101 283.497 53.3819 281.941 53.6041L281.961 53.594ZM285.797 27.5193C282.531 26.5899 279.407 27.196 276.761 29.0448C270.941 33.1363 267.898 40.1879 269.139 47.2092C269.669 50.1794 273.088 51.7756 275.672 50.24C283.66 45.5019 284.546 36.0661 285.787 27.5092L285.797 27.5193Z"
+                  fill="currentColor"
+                />
+                <path
+                  d="M181.088 53.2202C178.29 53.6445 175.868 53.5031 172.866 53.2809L178.117 25.9029C180.692 25.2564 183.286 25.4988 186.227 25.7514L181.099 53.2202H181.088Z"
+                  fill="currentColor"
+                />
+                <path
+                  d="M353.395 49.3813C358.371 53.4122 363.174 47.8154 364.191 49.9975C365.341 52.4524 357.689 54.0789 353.405 52.5838C345.865 49.9571 346.648 35.5206 354.586 27.7012C357.526 24.8017 362.36 23.741 365.86 25.913C368.221 27.3779 368.425 30.2672 367.997 32.6514C366.725 39.6828 355.644 38.8039 351.685 40.3597C349.905 42.1175 351.278 47.6537 353.405 49.3813H353.395ZM363.51 34.7831C365.667 33.3081 365.83 30.5097 364.843 28.8529C363.866 27.2062 361.21 26.6 359.083 27.5698C355.277 29.3075 352.927 33.005 352.021 37.1067C356.193 37.3794 360.101 37.1067 363.51 34.7831Z"
+                  fill="currentColor"
+                />
+                <path
+                  d="M327.671 38.2584L325.076 52.2504C324.852 53.4728 324.048 53.291 322.125 53.786L326.836 27.6103C326.968 26.8627 326.867 26.1757 327.111 25.7211C327.416 25.1352 328.729 25.2059 329.329 25.7211C330.031 26.3172 328.19 30.3582 330.438 28.762C333.196 26.0545 336.829 24.0138 340.808 25.3069C343.83 26.2868 345.203 29.6106 344.654 32.7626L341.276 52.1696C341.072 53.3718 340.156 53.5638 339.312 53.4425C338.467 53.3213 338.569 52.2605 338.732 51.22C339.77 44.9261 341.306 38.9858 341.968 32.6818C342.171 30.7724 341.408 28.863 340.227 28.0447C335.628 24.8523 328.861 31.8736 327.681 38.2685L327.671 38.2584Z"
+                  fill="currentColor"
+                />
+                <path
+                  d="M390.364 29.7924C386.324 36.8238 400.315 37.2885 397.375 47.2395C395.991 51.9372 391.3 53.9577 386.395 52.9171C385.408 52.705 383.943 52.3413 383.495 51.4826C383.159 50.8562 383.281 49.4419 384.075 48.4821C386.1 50.8663 388.379 51.1795 391.025 50.4723C393.019 49.9369 394.698 48.1184 394.912 45.5928C395.472 38.814 383.861 38.1876 387.606 29.5398C390.506 22.8418 399.359 24.7209 399.837 26.0948C401.313 30.3884 393.65 24.0945 390.384 29.7924H390.364Z"
+                  fill="currentColor"
+                />
+                <path
+                  d="M314.045 50.6037C315.744 50.9674 316.559 50.4825 317.383 52.9576C316.263 53.2102 314.615 53.1597 313.017 53.0385C310.046 52.796 309.039 49.9875 309.497 47.3406L312.651 28.9742C312.865 27.7518 310.158 27.9134 309.547 27.4891C309.1 27.1759 309.446 26.196 309.598 25.8828C309.802 25.4787 310.657 25.408 311.562 25.4383C316.131 25.5797 311.46 21.6599 317.281 18.8817L316.569 25.2968C319.235 25.6302 321.28 25.0544 323.315 25.5696C321.942 30.0551 316.335 25.9838 315.683 28.9237C314.289 35.2378 313.251 41.2286 312.203 47.4719C312.01 48.6539 312.407 50.2501 314.045 50.6037Z"
+                  fill="currentColor"
+                />
+                <path
+                  d="M293.429 53.8972C292.32 53.1395 291.811 53.5032 291.404 53.4123C290.997 53.3213 290.804 52.5536 290.946 51.7656L295.729 25.4686C296.522 25.1554 297.866 25.3979 297.805 26.0849C297.754 26.6809 297.855 27.4285 298.425 28.4994C300.756 27.1355 302.465 24.6705 305.538 25.1655C306.149 25.2666 306.016 26.5597 305.813 26.9739C305.579 27.4487 298.69 28.1458 296.41 37.8341C295.098 43.4006 294.202 48.6742 293.439 53.8972H293.429Z"
+                  fill="currentColor"
+                />
+                <path
+                  d="M381.938 28.1458C371.315 33.49 375.822 55.8167 369.564 53.8265L374.265 27.5901C374.398 26.8324 374.316 26.2162 374.479 25.8323C374.784 25.0948 376.087 25.1857 376.698 25.7616C377.247 26.2768 375.782 30.1663 377.817 28.7721C379.791 26.0848 382.661 24.7816 385.51 24.913C384.787 27.8932 383.454 27.3881 381.938 28.1458Z"
+                  fill="currentColor"
+                />
+                <path
+                  d="M183.744 22.3367C186.178 22.3367 188.15 20.3873 188.15 17.9825C188.15 15.5777 186.178 13.6283 183.744 13.6283C181.311 13.6283 179.338 15.5777 179.338 17.9825C179.338 20.3873 181.311 22.3367 183.744 22.3367Z"
+                  fill="currentColor"
+                />
+              </g>
+              <defs>
+                <clipPath id="clip0_shopify_cert">
+                  <rect width="400" height="66" fill="currentColor" />
+                </clipPath>
+              </defs>
+            </svg>
+          </div>
+        </div>
       </section>
     </div>
   )

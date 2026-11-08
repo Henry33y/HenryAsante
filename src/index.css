@@ -218,9 +218,9 @@
   display: inline-grid;
   position: relative;
   cursor: pointer;
-  font-family: var(--button-font);
+  font-family: var(--body-font);
   font-weight: var(--button-007-font-weight, 500);
-  letter-spacing: 0.05em;
+  letter-spacing: -0.01em;
 }
 
 .button-007:active {
@@ -253,6 +253,8 @@
 
 .button-007__text {
   text-transform: uppercase;
+  font-family: var(--body-font);
+  letter-spacing: -0.01em;
   width: 100%;
   height: 100%;
   padding: var(--button-007-padding);
@@ -308,6 +310,8 @@
 
 .button-007__svg-text {
   text-transform: uppercase;
+  font-family: var(--body-font);
+  letter-spacing: -0.01em;
   white-space: nowrap;
   line-height: inherit;
 }
@@ -468,12 +472,12 @@
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  padding: 0.9em 2em;
+  padding: 1em 2em;
   display: flex;
   background-color: var(--dark-blue);
   box-sizing: border-box;
   position: relative;
-  z-index: 5;
+  z-index: 2;
 }
 
 .service-number {
@@ -488,9 +492,10 @@
 .service-title {
   text-align: right;
   text-transform: uppercase;
+  font-family: var(--body-font);
   font-size: clamp(1.5rem, 2.7vw, 2.5em);
   font-weight: 700;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.015em;
   color: #ffffff;
 }
 
@@ -504,13 +509,14 @@
 
 .service-description {
   z-index: 1;
-  width: 26%;
+  width: 25%;
   position: absolute;
   bottom: 2em;
   left: 2em;
+  font-family: var(--body-font);
   font-size: clamp(0.95rem, 1.1vw, 1.15rem);
   line-height: 1.6;
-  color: rgba(255, 255, 255, 0.92);
+  color: var(--light-silver);
   font-weight: 400;
 }
 
@@ -523,17 +529,13 @@
   left: 29%;
   overflow: hidden;
   background-color: #ffffff; /* Solid White Card Background */
-  border-left: 2px solid #ffffff; /* DEEP WHITE VERTICAL BORDER */
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
 }
 
 .service-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: left top;
+  object-position: left center;
   display: block;
 }
 
@@ -639,6 +641,7 @@
    ========================================================================== */
 
 .portfolio {
+  font-family: var(--body-font);
   grid-column-gap: 5em;
   grid-row-gap: 5em;
   flex-flow: column;
@@ -651,6 +654,7 @@
 }
 
 .portfolio-header-w {
+  font-family: var(--body-font);
   grid-column-gap: 2em;
   grid-row-gap: 2em;
   text-align: center;
@@ -661,17 +665,20 @@
 }
 
 .portfolio-header__p {
+  font-family: var(--body-font);
   text-transform: uppercase;
-  font-size: clamp(1.8rem, 3.8vw, 3.75rem);
+  font-size: clamp(2rem, 4.4vw, 4.25rem);
   font-weight: 700;
-  line-height: 1.15;
+  line-height: 1.08;
   max-width: 24ch;
   margin: 0 auto;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.025em;
   text-align: center;
+  color: var(--ink-black);
 }
 
 .portfolio-orbit {
+  font-family: var(--body-font);
   z-index: 1;
   width: 100%;
   height: 85.5dvh;
@@ -709,8 +716,12 @@
   grid-row-gap: 0.2em;
   justify-content: flex-start;
   align-items: center;
-  font-size: clamp(3rem, 4vw, 4.25rem);
-  font-weight: 700;
+  font-size: clamp(3.25rem, 4.5vw, 4.25rem);
+  font-family: var(--body-font);
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+  color: var(--ink-black);
   display: flex;
   user-select: none;
 }
@@ -729,10 +740,14 @@
   font-size: 1em;
   line-height: 1;
   font-family: var(--body-font);
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+  color: var(--ink-black);
 }
 
 .portfolio-orbit__count-divider {
-  background-color: currentColor;
+  background-color: var(--ink-black);
   width: 2px;
   height: 0.75em;
   transform: rotate(15deg);
@@ -740,15 +755,15 @@
 }
 
 .portfolio-orbit__info-bottom {
-  grid-column-gap: 2.5em;
-  grid-row-gap: 2.5em;
+  grid-column-gap: 2em;
+  grid-row-gap: 2em;
   flex-flow: column;
   display: flex;
 }
 
 .portfolio-orbit__description {
   width: 100%;
-  max-width: 30em;
+  max-width: 28em;
   display: grid;
   position: relative;
   min-height: 8.5em;
@@ -760,24 +775,35 @@
   transition: opacity 0.4s ease, transform 0.4s ease;
 }
 
-.portfolio-orbit__content-item h3 {
-  font-size: clamp(1.85rem, 2.6vw, 2.65rem);
+.portfolio-orbit__content-item h3,
+.portfolio-orbit__heading {
+  font-family: var(--body-font);
+  font-size: clamp(1.85rem, 2.5vw, 2.5rem);
   font-weight: 700;
-  letter-spacing: -0.02em;
-  margin-bottom: 0.5em;
+  letter-spacing: -0.015em;
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+  line-height: 1.15;
   text-transform: uppercase;
   color: var(--ink-black);
 }
 
-.portfolio-orbit__content-item p {
-  font-size: clamp(0.95rem, 1.1vw, 1.15rem);
-  line-height: 1.6;
-  color: rgba(8, 9, 18, 0.85);
+.portfolio-orbit__content-item p,
+.portfolio-orbit__paragraph {
+  font-family: var(--body-font);
+  font-size: clamp(1rem, 1.12vw, 1.15rem);
+  line-height: 1.55;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-top: 0.25rem;
+  padding-bottom: 0.5rem;
+  color: var(--ink-black);
+  max-width: 28em;
 }
 
 .portfolio-orbit__overlay-nav {
-  grid-column-gap: 1.5em;
-  grid-row-gap: 1.5em;
+  grid-column-gap: 2em;
+  grid-row-gap: 2em;
   display: flex;
   align-items: center;
 }
@@ -787,8 +813,9 @@
   height: 3.5em;
   color: var(--dark-blue);
   background-color: transparent;
-  border: 1px solid rgba(42, 64, 147, 0.25);
-  border-radius: 50%;
+  border: 1px solid rgba(42, 64, 147, 0.2);
+  border-left-color: rgba(42, 64, 147, 0.6);
+  border-radius: 0.4em;
   justify-content: center;
   align-items: center;
   display: flex;
@@ -822,9 +849,9 @@
 .portfolio-orbit__btn-overlay-corner {
   border-top: 1px solid var(--dark-blue);
   border-left: 1px solid var(--dark-blue);
-  border-top-left-radius: 4px;
-  width: 8px;
-  height: 8px;
+  border-top-left-radius: 0.4em;
+  width: 1em;
+  height: 1em;
   position: absolute;
   top: 0;
   left: 0;
@@ -854,8 +881,8 @@
 
 .portfolio-orbit__btn-arrow {
   flex: none;
-  width: 1.1em;
-  height: 0.8em;
+  width: 1em;
+  height: 0.75em;
   transition: transform 0.3s ease;
 }
 
@@ -1005,5 +1032,539 @@
 
   .portfolio-orbit__card {
     width: clamp(14em, 68vw, 22em);
+  }
+}
+
+/* ==========================================================================
+   Certifications & Partnerships Section - Authentic alejandroha.com
+   ========================================================================== */
+
+.certification {
+  grid-column-gap: 3em;
+  grid-row-gap: 3em;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: 52em;
+  padding: 7.5em 2em;
+  display: flex;
+  background-color: var(--light-silver);
+  color: var(--ink-black);
+  position: relative;
+}
+
+.certification-header-w {
+  width: 100%;
+  max-width: 66em;
+  text-align: center;
+}
+
+.certified-big-txt {
+  font-family: var(--body-font);
+  text-align: center;
+  text-transform: uppercase;
+  font-size: clamp(2.5rem, 5.5vw, 5.25rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.025em;
+  color: var(--ink-black);
+}
+
+.split-char {
+  display: inline-block;
+  will-change: transform, filter, opacity;
+}
+
+.certification-content-w {
+  text-align: center;
+  width: 100%;
+  max-width: 42em;
+}
+
+.certification-content-w p {
+  font-family: var(--body-font);
+  font-size: clamp(1rem, 1.2vw, 1.25rem);
+  line-height: 1.6;
+  color: var(--ink-black);
+  font-weight: 400;
+  margin: 0;
+}
+
+.certifications-logos {
+  grid-column-gap: 3.5em;
+  grid-row-gap: 2.5em;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 55em;
+  display: flex;
+  margin-top: 1.5em;
+}
+
+.certifications-logo {
+  width: clamp(12em, 20vw, 18em);
+  color: var(--ink-black);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.certifications-logo:hover {
+  opacity: 0.8;
+  transform: translateY(-2px);
+}
+
+/* Tablet Responsive */
+@media screen and (max-width: 991px) {
+  .certified-big-txt {
+    font-size: 4rem;
+  }
+
+  .certification {
+    min-height: 39em;
+    padding: 5.625em 1.5em;
+  }
+
+  .certifications-logos {
+    max-width: 44em;
+    grid-column-gap: 2.5em;
+  }
+}
+
+/* Mobile Landscape Responsive */
+@media screen and (max-width: 767px) {
+  .certified-big-txt {
+    font-size: 2.85rem;
+  }
+
+  .certifications-logos {
+    flex-direction: column;
+    justify-content: center;
+    grid-row-gap: 2.5em;
+    margin-top: 0.5em;
+  }
+
+  .certifications-logo {
+    width: 13.5em;
+  }
+
+  .certification {
+    grid-column-gap: 2.25em;
+    grid-row-gap: 2.25em;
+    min-height: 29.25em;
+    padding: 4.21875em 1.25em;
+  }
+}
+
+/* Mobile Portrait Responsive */
+@media screen and (max-width: 479px) {
+  .certified-big-txt {
+    font-size: 2.25rem;
+  }
+}
+
+/* ==========================================================================
+   Contact Section & Dynamic Floating Word Cloud - Authentic alejandroha.com
+   ========================================================================== */
+
+.contact {
+  background-color: var(--ink-black);
+  width: 100%;
+  height: 250dvh;
+  color: var(--light-silver);
+  position: relative;
+}
+
+.contact-sticky {
+  perspective: 1000px;
+  width: 100%;
+  height: 100dvh;
+  transform-style: preserve-3d;
+  place-items: center;
+  display: grid;
+  position: sticky;
+  top: 0;
+  overflow: hidden;
+}
+
+.contact-words {
+  z-index: 3;
+  pointer-events: none;
+  transform-style: preserve-3d;
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+[data-contact-word] {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  font-family: var(--body-font);
+  font-weight: 700;
+  font-size: clamp(2.5rem, 5.5vw, 5rem);
+  text-transform: uppercase;
+  color: var(--light-silver);
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+  will-change: transform, opacity, filter;
+}
+
+.contact-content {
+  z-index: 2;
+  grid-column-gap: 2em;
+  grid-row-gap: 2em;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+  width: min(90%, 50rem);
+  display: flex;
+  position: relative;
+  will-change: transform, opacity, filter;
+}
+
+.contact-heading {
+  text-transform: uppercase;
+  font-family: var(--body-font);
+  font-size: clamp(5em, 13vw, 12.5em);
+  font-weight: 700;
+  line-height: 0.85;
+  margin: 0;
+  text-align: center;
+  color: var(--light-silver);
+}
+
+.contact-text {
+  text-align: center;
+  max-width: 30em;
+  font-family: var(--body-font);
+  font-size: clamp(1rem, 1.25vw, 1.25rem);
+  line-height: 1.5;
+  color: var(--light-silver);
+  margin: 0;
+}
+
+.button-group {
+  grid-column-gap: 1em;
+  grid-row-gap: 1em;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+/* ==========================================================================
+   Footer Section & Curtain Parallax - Authentic alejandroha.com
+   ========================================================================== */
+
+.footer-wrap {
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  background-color: var(--dark-blue);
+}
+
+.footer {
+  background-color: var(--dark-blue);
+  width: 100%;
+  height: 100%;
+  max-height: 100svh;
+  color: var(--light-silver);
+  font-family: var(--body-font);
+  flex-flow: column;
+  padding: 5em 2em;
+  display: flex;
+  position: relative;
+  box-sizing: border-box;
+}
+
+.footer-top {
+  grid-column-gap: 7.5em;
+  grid-row-gap: 7.5em;
+  flex-flow: column;
+  justify-content: space-between;
+  padding: 3em 2.5em;
+  display: flex;
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.footer-bracket {
+  border-top: 1em solid var(--light-silver);
+  border-bottom: 1em solid var(--light-silver);
+  border-left: 1em solid var(--light-silver);
+  pointer-events: none;
+  width: 3.5em;
+  height: 100%;
+  position: absolute;
+  inset: 0% auto 0% 0%;
+  box-sizing: border-box;
+}
+
+.footer-bracket.is--2 {
+  border-right: 1em solid var(--light-silver);
+  border-left-width: 0;
+  inset: 0% 0% 0% auto;
+}
+
+.footer-content-w {
+  grid-column-gap: 2.5em;
+  grid-row-gap: 2.5em;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.demo-footer__col {
+  grid-column-gap: 3em;
+  grid-row-gap: 1.5em;
+  flex-flow: column;
+  width: calc(33.3333% - 1.66667em);
+  display: flex;
+}
+
+.footer__links-label {
+  white-space: nowrap;
+  font-family: var(--body-font);
+  font-size: 2em;
+  font-weight: 700;
+  margin: 0;
+  color: var(--light-silver);
+}
+
+.footer__links-list {
+  grid-column-gap: 0.25em;
+  grid-row-gap: 0.25em;
+  flex-flow: column;
+  align-items: flex-start;
+  padding-left: 0;
+  list-style: none;
+  display: flex;
+  margin: 0;
+}
+
+.footer__links-list-item {
+  margin: 0;
+  padding: 0;
+}
+
+.footer__links-txt {
+  font-family: var(--body-font);
+  font-size: 1.25em;
+  color: var(--light-silver);
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+  position: relative;
+  display: inline-block;
+}
+
+.footer__links-txt:hover {
+  opacity: 0.75;
+}
+
+.txt-color-astronaut {
+  color: var(--astronaut);
+}
+
+.footer-copy {
+  background-color: var(--astronaut);
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  min-height: 2.5em;
+  padding: 0.5em 2em;
+  display: flex;
+  position: absolute;
+  inset: auto 0% 0%;
+  box-sizing: border-box;
+}
+
+.footer-copy__left {
+  grid-column-gap: 2em;
+  grid-row-gap: 2em;
+  display: flex;
+  align-items: center;
+}
+
+.footer-copy__label {
+  font-family: var(--body-font);
+  text-transform: uppercase;
+  font-size: 0.95em;
+  font-weight: 400;
+  line-height: 1;
+  margin: 0;
+  color: var(--light-silver);
+}
+
+.footer-copy__link {
+  text-decoration: none;
+  color: inherit;
+  transition: opacity 0.2s ease;
+}
+
+.footer-copy__link:hover {
+  opacity: 0.8;
+}
+
+/* Tablet Responsive */
+@media screen and (max-width: 991px) {
+  .contact-content {
+    grid-column-gap: 1.5em;
+    grid-row-gap: 1.5em;
+  }
+
+  .demo-footer__col {
+    grid-column-gap: 2.25em;
+    grid-row-gap: 1.25em;
+    width: calc(33.3333% - 1.33333em);
+  }
+
+  .footer-copy {
+    min-height: 2em;
+    padding: 0.375em 1.5em;
+  }
+
+  .footer-copy__left {
+    grid-column-gap: 1.5em;
+    grid-row-gap: 1.5em;
+  }
+
+  .footer-copy__label {
+    font-size: 0.75em;
+  }
+
+  .footer-content-w {
+    grid-column-gap: 2em;
+    grid-row-gap: 2em;
+  }
+
+  .footer__links-txt {
+    font-size: 0.9375em;
+  }
+
+  .footer__links-label {
+    font-size: 1.5em;
+  }
+
+  .footer-bracket {
+    border-top-width: 0.75em;
+    border-bottom-width: 0.75em;
+    border-left-width: 0.75em;
+    width: 2.625em;
+  }
+
+  .footer-bracket.is--2 {
+    border-right-width: 0.75em;
+  }
+
+  .footer-top {
+    grid-column-gap: 5.625em;
+    grid-row-gap: 5.625em;
+    padding: 2.25em 1.875em;
+  }
+
+  .footer {
+    padding: 3.75em 1.5em;
+  }
+}
+
+/* Mobile Responsive */
+@media screen and (max-width: 767px) {
+  .contact-heading {
+    font-size: clamp(4em, 10vw, 10em);
+  }
+
+  .demo-footer__col {
+    grid-column-gap: 1em;
+    grid-row-gap: 1em;
+    width: calc(33.3333% - 0.666667em);
+  }
+
+  .footer__links-list {
+    grid-column-gap: 0em;
+    grid-row-gap: 0em;
+  }
+
+  .footer-copy {
+    grid-column-gap: 0.5em;
+    grid-row-gap: 0.5em;
+    flex-flow: column;
+    padding: 0.75em 1em;
+    position: relative;
+    inset: auto;
+  }
+
+  .footer-copy__left {
+    order: 2;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .footer-content-w {
+    grid-column-gap: 1em;
+    grid-row-gap: 1em;
+  }
+
+  .footer__links-txt {
+    font-size: 0.75em;
+  }
+
+  .footer__links-label {
+    font-size: 1.125em;
+  }
+
+  .footer-bracket {
+    border-top-width: 0.5625em;
+    border-bottom-width: 0.5625em;
+    border-left-width: 0.5625em;
+    width: 1.96875em;
+  }
+
+  .footer-bracket.is--2 {
+    border-right-width: 0.5625em;
+  }
+
+  .footer-top {
+    grid-column-gap: 4.21875em;
+    grid-row-gap: 4.21875em;
+    padding: 1.5em;
+  }
+
+  .footer {
+    padding: 2em 1em 4.5em;
+    max-height: none;
+    height: auto;
+  }
+}
+
+@media screen and (max-width: 479px) {
+  .footer-content-w {
+    grid-column-gap: 1.5em;
+    grid-row-gap: 1.5em;
+    flex-flow: column;
+  }
+
+  .demo-footer__col {
+    width: 100%;
+  }
+
+  .footer-copy__left {
+    flex-flow: column;
+    align-items: center;
+    gap: 0.5em;
+  }
+
+  .footer-top {
+    grid-column-gap: 3em;
+    grid-row-gap: 3em;
+  }
+
+  .footer {
+    padding-top: 1em;
+    padding-bottom: 2em;
   }
 }
