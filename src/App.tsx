@@ -156,6 +156,13 @@ export default function App() {
   const certificationRef = useRef<HTMLElement>(null)
   const certifiedHeadingRef = useRef<HTMLHeadingElement>(null)
 
+  // Contact & Footer Section Refs
+  const contactRef = useRef<HTMLElement>(null)
+  const contactContentRef = useRef<HTMLDivElement>(null)
+  const contactWordsRef = useRef<HTMLDivElement>(null)
+  const footerWrapRef = useRef<HTMLDivElement>(null)
+  const footerInnerRef = useRef<HTMLElement>(null)
+
   const lenisRef = useRef<Lenis | null>(null)
   const [language, setLanguage] = useState<'en' | 'es'>('en')
   const [copiedNotification, setCopiedNotification] = useState<string | null>(null)
@@ -165,7 +172,31 @@ export default function App() {
   const checkTheme = useCallback(() => {
     const navY = 50 // Vertical center checkpoint of the fixed header
 
-    // 1. If certifications section is reaching or has reached the header -> background is light silver -> black text
+    // 1. If footer is reached -> dark blue background -> white text
+    if (footerWrapRef.current) {
+      const footRect = footerWrapRef.current.getBoundingClientRect()
+      if (footRect.top <= navY) {
+        if (!isBrandWhiteRef.current) {
+          isBrandWhiteRef.current = true
+          setIsBrandWhite(true)
+        }
+        return
+      }
+    }
+
+    // 2. If contact is active under the header -> ink-black background -> white text
+    if (contactRef.current) {
+      const contactRect = contactRef.current.getBoundingClientRect()
+      if (contactRect.top <= navY && contactRect.bottom >= 0) {
+        if (!isBrandWhiteRef.current) {
+          isBrandWhiteRef.current = true
+          setIsBrandWhite(true)
+        }
+        return
+      }
+    }
+
+    // 3. If certifications section is reaching or has reached the header -> background is light silver -> black text
     if (certificationRef.current) {
       const certRect = certificationRef.current.getBoundingClientRect()
       if (certRect.top <= navY && certRect.bottom >= 0) {
@@ -177,10 +208,10 @@ export default function App() {
       }
     }
 
-    // 2. If portfolio is reaching or has reached the header -> background is light silver -> black text
+    // 4. If portfolio is reaching or has reached the header -> background is light silver -> black text
     if (portfolioRef.current) {
       const portRect = portfolioRef.current.getBoundingClientRect()
-      if (portRect.top <= navY) {
+      if (portRect.top <= navY && portRect.bottom >= 0) {
         if (isBrandWhiteRef.current) {
           isBrandWhiteRef.current = false
           setIsBrandWhite(false)
@@ -189,7 +220,7 @@ export default function App() {
       }
     }
 
-    // 2. If services showcase is active under the header -> background is 100% purple -> white text
+    // 5. If services showcase is active under the header -> background is 100% purple -> white text
     if (servicesRef.current) {
       const servRect = servicesRef.current.getBoundingClientRect()
       if (servRect.top <= navY && servRect.bottom >= 0) {
@@ -201,7 +232,7 @@ export default function App() {
       }
     }
 
-    // 3. If scroll draw transition is active under the header
+    // 6. If scroll draw transition is active under the header
     if (scrollDrawTransitionRef.current) {
       const transRect = scrollDrawTransitionRef.current.getBoundingClientRect()
       if (transRect.top <= navY && transRect.bottom >= 0) {
@@ -222,7 +253,7 @@ export default function App() {
       }
     }
 
-    // 4. Fallback (Hero or About section) -> background is light silver -> black text
+    // 7. Fallback (Hero or About section) -> background is light silver -> black text
     if (isBrandWhiteRef.current) {
       isBrandWhiteRef.current = false
       setIsBrandWhite(false)
@@ -978,6 +1009,164 @@ export default function App() {
     { scope: containerRef, dependencies: [language] }
   )
 
+  // Authentic 3D Floating Multilingual Word Cloud (initContactSection) & Footer Curtain Parallax (initFooterParallax)
+  useGSAP(
+    () => {
+      // 1. Contact Section
+      if (contactRef.current && contactContentRef.current && contactWordsRef.current) {
+        const contactEl = contactRef.current
+        const contentEl = contactContentRef.current
+        const wordsEl = contactWordsRef.current
+
+        const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+        const wordList = [
+          'CONTACTO',
+          'CONTACT',
+          'CONTACTEZ',
+          'CONTATTO',
+          'KONTAKT',
+          'CONTATO',
+          'CONTACT',
+          'ΕΠΙΚΟΙΝΩΝΙΑ',
+          '連絡',
+          '연락',
+          'تواصل',
+        ]
+        const baseCoords = [
+          { x: -38, y: -38 }, { x: -14, y: -40 }, { x: 14, y: -40 }, { x: 38, y: -38 },
+          { x: -42, y: -14 }, { x: -18, y: -18 }, { x: 18, y: -18 }, { x: 42, y: -14 },
+          { x: -42, y: 14 },  { x: -18, y: 18 },  { x: 18, y: 18 },  { x: 42, y: 14 },
+          { x: -38, y: 38 },  { x: -14, y: 40 },  { x: 14, y: 40 },  { x: 38, y: 38 },
+        ]
+
+        // Content entrance reveal
+        gsap.set(contentEl, { autoAlpha: 0, yPercent: 25, scale: 0.96, filter: 'blur(0.5rem)' })
+        gsap.to(contentEl, {
+          autoAlpha: 1,
+          yPercent: 0,
+          scale: 1,
+          filter: 'blur(0rem)',
+          ease: 'none',
+          scrollTrigger: {
+            trigger: contactEl,
+            start: 'top 60%',
+            end: 'top 25%',
+            scrub: true,
+            invalidateOnRefresh: true,
+            onUpdate: checkTheme,
+          },
+        })
+
+        if (!reducedMotion) {
+          wordsEl.innerHTML = ''
+          const wordSpans: HTMLElement[] = []
+          for (let i = 0; i < 50; i++) {
+            const span = document.createElement('span')
+            span.setAttribute('data-contact-word', '')
+            span.textContent = wordList[i % wordList.length]
+            wordsEl.appendChild(span)
+            wordSpans.push(span)
+          }
+
+          const contactTl = gsap.timeline({
+            scrollTrigger: {
+              trigger: contactEl,
+              start: 'top top',
+              end: 'bottom bottom',
+              scrub: 1,
+              invalidateOnRefresh: true,
+              onUpdate: checkTheme,
+            },
+          })
+
+          wordSpans.forEach((span, i) => {
+            const coord = baseCoords[i % baseCoords.length]
+            const tierOffset = 0.12 * Math.floor(i / baseCoords.length)
+            const startTime = gsap.utils.random(0, 0.52) + tierOffset
+            const dur1 = gsap.utils.random(0.12, 0.18)
+            const dur2 = gsap.utils.random(0.12, 0.18)
+
+            const initX = coord.x * gsap.utils.random(0.08, 0.22)
+            const initY = coord.y * gsap.utils.random(0.08, 0.22)
+            const midX = coord.x + gsap.utils.random(-4, 4)
+            const midY = coord.y + gsap.utils.random(-4, 4)
+            const endX = midX + gsap.utils.random(-3, 3)
+            const endY = midY + gsap.utils.random(-3, 3)
+            const scaleM = gsap.utils.random(0.7, 1.3)
+            const maxAlpha = gsap.utils.random(0.25, 0.62)
+
+            gsap.set(span, {
+              position: 'absolute',
+              left: '50%',
+              top: '50%',
+              xPercent: -50,
+              yPercent: -50,
+              x: `${initX}vw`,
+              y: `${initY}vh`,
+              z: gsap.utils.random(-1600, -1100),
+              scale: 0.35 * scaleM,
+              autoAlpha: 0,
+              filter: 'blur(0.65rem)',
+            })
+
+            contactTl
+              .to(
+                span,
+                {
+                  x: `${midX}vw`,
+                  y: `${midY}vh`,
+                  z: 0,
+                  scale: scaleM,
+                  autoAlpha: maxAlpha,
+                  filter: 'blur(0rem)',
+                  duration: dur1,
+                  ease: 'power1.inOut',
+                },
+                startTime
+              )
+              .to(
+                span,
+                {
+                  x: `${endX}vw`,
+                  y: `${endY}vh`,
+                  z: gsap.utils.random(800, 1200),
+                  scale: scaleM * gsap.utils.random(1.3, 1.65),
+                  autoAlpha: 0,
+                  filter: 'blur(0.5rem)',
+                  duration: dur2,
+                  ease: 'power1.in',
+                },
+                startTime + dur1
+              )
+          })
+        }
+      }
+
+      // 2. Footer Curtain Parallax Reveal
+      if (footerWrapRef.current && footerInnerRef.current) {
+        const wrapEl = footerWrapRef.current
+        const innerEl = footerInnerRef.current
+
+        const mmFooter = gsap.matchMedia()
+        mmFooter.add('(min-width: 768px)', () => {
+          gsap.from(innerEl, {
+            yPercent: -100,
+            ease: 'linear',
+            scrollTrigger: {
+              trigger: wrapEl,
+              start: 'clamp(top bottom)',
+              end: 'clamp(top top)',
+              scrub: true,
+              invalidateOnRefresh: true,
+              onUpdate: checkTheme,
+            },
+          })
+        })
+      }
+    },
+    { scope: containerRef, dependencies: [language] }
+  )
+
   // Subtle interactive mouse parallax in hero
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!bgWrapRef.current) return
@@ -1007,7 +1196,7 @@ export default function App() {
   return (
     <div
       ref={containerRef}
-      className="relative w-full max-w-full overflow-x-hidden bg-[#e2e1e1] text-[#080912] font-sans selection:bg-[#080912] selection:text-white"
+      className="relative w-full max-w-full overflow-x-clip bg-[#e2e1e1] text-[#080912] font-sans selection:bg-[#080912] selection:text-white"
     >
       {/* Toast Notification */}
       {copiedNotification && (
@@ -1815,6 +2004,263 @@ export default function App() {
           </div>
         </div>
       </section>
+
+      {/* ==========================================================================
+          7. Contact Section (Authentic Dynamic 3D Multilingual Floating Word Cloud)
+          ========================================================================== */}
+      <section
+        id="contact"
+        ref={contactRef}
+        data-theme-section="light"
+        data-contact=""
+        className="contact"
+      >
+        <div data-contact-sticky="" className="contact-sticky">
+          <div
+            ref={contactWordsRef}
+            aria-hidden="true"
+            data-contact-words=""
+            className="contact-words"
+          />
+          <div
+            ref={contactContentRef}
+            data-contact-content=""
+            className="contact-content"
+          >
+            <h2 className="contact-heading">
+              {language === 'en' ? 'Contact' : 'Contacto'}
+            </h2>
+            <p className="contact-text">
+              {language === 'en'
+                ? "Have a project in mind? I'd love to hear from you. Tell me what you need and I'll get back to you shortly."
+                : '¿Tienes un proyecto en mente? Me encantaría escucharte. Cuéntame qué necesitas y te respondo a la brevedad.'}
+            </p>
+            <div className="button-group">
+              <ScribbleButton
+                variant="light-silver"
+                size="md"
+                weight="normal"
+                href="https://cal.com/alejandroha/reunion-pagina-web"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() =>
+                  showNotification(
+                    language === 'en' ? 'Opening Cal.com booking...' : 'Abriendo agenda Cal.com...'
+                  )
+                }
+              >
+                {language === 'en' ? 'Book a Call' : 'Agenda Llamada'}
+              </ScribbleButton>
+
+              <ScribbleButton
+                variant="dark-blue"
+                size="md"
+                weight="normal"
+                href="https://wa.me/524611407412"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {language === 'en' ? 'Get a Quote' : 'Cotiza aquí'}
+              </ScribbleButton>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ==========================================================================
+          8. Footer Section (Authentic Curtain Parallax + Framed Brackets + Wordmark)
+          ========================================================================== */}
+      <div
+        ref={footerWrapRef}
+        data-theme-section="light"
+        data-footer=""
+        className="footer-wrap"
+      >
+        <footer
+          ref={footerInnerRef}
+          data-footer-inner=""
+          className="footer"
+        >
+          <div className="footer-top">
+            <div className="footer-bracket" />
+            <div className="footer-bracket is--2" />
+            <div className="footer-content-w">
+              {/* Col 1: Socials */}
+              <div className="demo-footer__col">
+                <p className="footer__links-label">[ Socials ]</p>
+                <ul className="footer__links-list">
+                  <li className="footer__links-list-item">
+                    <a
+                      data-underline-link=""
+                      href="https://www.tiktok.com/@kr3ado"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="footer__links-txt"
+                    >
+                      TikTok
+                    </a>
+                  </li>
+                  <li className="footer__links-list-item">
+                    <a
+                      data-underline-link=""
+                      href="https://www.instagram.com/_alejandro.ha/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="footer__links-txt"
+                    >
+                      Instagram
+                    </a>
+                  </li>
+                  <li className="footer__links-list-item">
+                    <a
+                      data-underline-link=""
+                      href="https://www.awwwards.com/alejandroha/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="footer__links-txt"
+                    >
+                      Awwwards
+                    </a>
+                  </li>
+                </ul>
+              </div>
+
+              {/* Col 2: Navigation */}
+              <div className="demo-footer__col">
+                <p className="footer__links-label">[ Nav ]</p>
+                <ul className="footer__links-list">
+                  <li className="footer__links-list-item">
+                    <button
+                      onClick={() => {
+                        const el = document.getElementById('about')
+                        if (el) lenisRef.current?.scrollTo(el)
+                      }}
+                      className="bg-transparent border-0 p-0 text-left cursor-pointer"
+                    >
+                      <span data-underline-link="" className="footer__links-txt">
+                        {language === 'en' ? 'About' : 'Sobre mí'}
+                      </span>
+                    </button>
+                  </li>
+                  <li className="footer__links-list-item">
+                    <button
+                      onClick={() => {
+                        const el =
+                          document.getElementById('services-showcase') ||
+                          document.getElementById('services')
+                        if (el) lenisRef.current?.scrollTo(el)
+                      }}
+                      className="bg-transparent border-0 p-0 text-left cursor-pointer"
+                    >
+                      <span data-underline-link="" className="footer__links-txt">
+                        {language === 'en' ? 'Services' : 'Servicios'}
+                      </span>
+                    </button>
+                  </li>
+                  <li className="footer__links-list-item">
+                    <button
+                      onClick={() => {
+                        const el = document.getElementById('portfolio')
+                        if (el) lenisRef.current?.scrollTo(el)
+                      }}
+                      className="bg-transparent border-0 p-0 text-left cursor-pointer"
+                    >
+                      <span data-underline-link="" className="footer__links-txt">
+                        {language === 'en' ? 'Projects' : 'Proyectos'}
+                      </span>
+                    </button>
+                  </li>
+                  <li className="footer__links-list-item">
+                    <button
+                      onClick={() => {
+                        const el = document.getElementById('contact')
+                        if (el) lenisRef.current?.scrollTo(el)
+                      }}
+                      className="bg-transparent border-0 p-0 text-left cursor-pointer"
+                    >
+                      <span data-underline-link="" className="footer__links-txt">
+                        {language === 'en' ? 'Contact' : 'Contacto'}
+                      </span>
+                    </button>
+                  </li>
+                </ul>
+              </div>
+
+              {/* Col 3: Contact Details */}
+              <div className="demo-footer__col">
+                <p className="footer__links-label">
+                  {language === 'en' ? '[ Contact ]' : '[ Contáctanos ]'}
+                </p>
+                <ul className="footer__links-list">
+                  <li className="footer__links-list-item">
+                    <a
+                      data-underline-link=""
+                      href="mailto:info@alejandroha.com?subject=Contacto%20Alejandro%20HA"
+                      className="footer__links-txt"
+                    >
+                      info@alejandroha.com
+                    </a>
+                  </li>
+                  <li className="footer__links-list-item">
+                    <a
+                      data-underline-link=""
+                      href="https://wa.me/524611407412"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="footer__links-txt"
+                    >
+                      +52 461 140 7412
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            {/* Astronaut Blue Giant ALEJANDRO HA. Wordmark Vector */}
+            <div className="txt-color-astronaut">
+              <svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 281 26" fill="none">
+                <g clipPath="url(#clip0_footer_logo)">
+                  <path d="M22.78 24.36H19.1L18.49 21.29L17.31 18.47H5.11L3.9 21.29L3.29 24.36H0L9.46 2.18001L8.71 0.640015H12.75L22.78 24.35V24.36ZM16.43 16.39L11.21 4.00001L5.96 16.39H16.42H16.43Z" fill="currentColor" />
+                  <path d="M42.99 21.5L42.56 24.36H26.7L27.2 21.11V3.89001L26.7 0.640015H30.45L29.99 3.89001V22.25H39.7L42.99 21.5Z" fill="currentColor" />
+                  <path d="M65.38 21.57L64.95 24.36H47.56L48.06 21.11V3.89001L47.56 0.640015H64.81L65.24 3.43001L61.95 2.68001H50.81V11.18H59.17L61.99 10.82V13.53L59.17 13.17H50.81V22.31H62.09L65.38 21.56V21.57Z" fill="currentColor" />
+                  <path d="M68.67 22.89V19.46L72.17 22.17C72.81 22.42 73.53 22.56 74.17 22.56C76.99 22.56 78.53 20.95 78.53 17.88V3.89001L78.03 0.640015H81.78L81.32 3.89001L81.28 17.5C81.28 21.96 78.78 24.68 74.39 24.68C72.39 24.68 70.75 24.14 68.68 22.89H68.67Z" fill="currentColor" />
+                  <path d="M107.55 24.36H103.87L103.26 21.29L102.08 18.47H89.87L88.66 21.29L88.05 24.36H84.76L94.22 2.18001L93.47 0.640015H97.51L107.54 24.35L107.55 24.36ZM101.2 16.39L95.99 4.00001L90.74 16.39H101.2Z" fill="currentColor" />
+                  <path d="M132.73 0.640015L132.23 3.89001V24.35H128.37L114.37 2.89001V21.1L114.83 24.35H111.47L111.97 21.1V3.89001L111.47 0.640015H115.9L129.83 22.03V3.89001L129.37 0.640015H132.73Z" fill="currentColor" />
+                  <path d="M139.37 21.11V3.89001L138.87 0.640015H147.66C155.94 0.640015 160.12 4.39001 160.12 12.46C160.12 20.53 155.94 24.35 147.66 24.35H138.87L139.37 21.1V21.11ZM147.76 22.28C154.01 22.28 157.22 19.32 157.22 12.46C157.22 5.60001 154.04 2.71001 147.79 2.71001H142.11V22.28H147.75H147.76Z" fill="currentColor" />
+                  <path d="M185.79 24.36H181.4L180.4 21.79L174.58 14.5H168.83V21.11L169.44 24.36H165.55L166.05 21.11V3.89001L165.55 0.640015H176.12C181.62 0.640015 184.3 3.10001 184.3 7.50001C184.3 11.18 181.91 13.61 177.51 14.11L185.79 24.36ZM175.26 12.39C179.12 12.39 181.51 10.68 181.51 7.50001C181.51 4.32001 179.62 2.61001 175.76 2.61001H168.76V12.39H175.26Z" fill="currentColor" />
+                  <path d="M189.61 12.46C189.61 4.64 194.36 0 201.39 0C208.42 0 213.17 4.64 213.17 12.46C213.17 20.28 208.35 25.03 201.39 25.03C194.43 25.03 189.61 20.28 189.61 12.46ZM210.25 12.46C210.25 5.82 206.57 2.14 201.39 2.14C196.21 2.14 192.53 5.82 192.53 12.46C192.53 19.1 196.17 22.85 201.35 22.85C206.53 22.85 210.24 19.14 210.24 12.46H210.25Z" fill="currentColor" />
+                  <path d="M227.28 21.11V3.89001L226.78 0.640015H230.53L230.07 3.89001V11.14H244.14V3.89001L243.68 0.640015H247.43L246.93 3.89001V21.1L247.43 24.35H243.68L244.14 21.1V13.24H230.07V21.1L230.53 24.35H226.78L227.28 21.1V21.11Z" fill="currentColor" />
+                  <path d="M274.13 24.36H270.45L269.84 21.29L268.66 18.47H256.45L255.24 21.29L254.63 24.36H251.34L260.8 2.18001L260.05 0.640015H264.09L274.12 24.35L274.13 24.36ZM267.77 16.39L262.56 4.00001L257.31 16.39H267.77Z" fill="currentColor" />
+                  <path d="M280.56 20.1899H276.58V24.3599H280.56V20.1899Z" fill="currentColor" />
+                </g>
+                <defs>
+                  <clipPath id="clip0_footer_logo">
+                    <rect width="280.55" height="25.03" fill="currentColor" />
+                  </clipPath>
+                </defs>
+              </svg>
+            </div>
+          </div>
+
+          {/* Bottom Copyright Bar */}
+          <div className="footer-copy">
+            <div className="footer-copy__left">
+              <p className="footer-copy__label">Small details, big impact</p>
+              <p className="footer-copy__label">© {new Date().getFullYear()}, Alejandro Hinojosa</p>
+            </div>
+            <a
+              href="https://www.luanstudio.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="footer-copy__link"
+            >
+              <p data-underline-link="" className="footer-copy__label">
+                Design by: Luan Studio
+              </p>
+            </a>
+          </div>
+        </footer>
+      </div>
     </div>
   )
 }

@@ -15,6 +15,7 @@
   --button-font: 'atyp-bl-variable', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --ink-black: #080912;
   --dark-blue: #2a4093;
+  --astronaut: #273879;
   --transparent: transparent;
   --border-circle: 50%;
   --white: #ffffff;
@@ -32,7 +33,7 @@
     background-color: var(--light-silver);
     color: var(--ink-black);
     font-family: var(--body-font);
-    overflow-x: hidden;
+    overflow-x: clip;
   }
 }
 
@@ -1165,6 +1166,34 @@
   }
 }
 
+/* ----- Authentic Underline Links from alejandroha.com ----- */
+[data-underline-link] {
+  position: relative;
+  text-decoration: none;
+  display: inline-block;
+}
+
+[data-underline-link]::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -0.0625em;
+  width: 100%;
+  height: 0.0625em;
+  background-color: currentColor;
+  transform: scaleX(0) rotate(0.001deg);
+  transform-origin: right;
+  transition: transform 0.735s cubic-bezier(0.625, 0.05, 0, 1);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  [data-hover]:hover [data-underline-link]::before,
+  [data-underline-link]:hover::before {
+    transform: scaleX(1) rotate(0.001deg);
+    transform-origin: left;
+  }
+}
+
 /* ==========================================================================
    Contact Section & Dynamic Floating Word Cloud - Authentic alejandroha.com
    ========================================================================== */
@@ -1184,9 +1213,11 @@
   transform-style: preserve-3d;
   place-items: center;
   display: grid;
+  position: -webkit-sticky;
   position: sticky;
   top: 0;
   overflow: hidden;
+  will-change: transform;
 }
 
 .contact-words {
@@ -1200,14 +1231,19 @@
 
 [data-contact-word] {
   position: absolute;
-  left: 50%;
   top: 50%;
+  left: 50%;
+  margin: 0;
   font-family: var(--body-font);
-  font-weight: 700;
-  font-size: clamp(2.5rem, 5.5vw, 5rem);
+  font-size: clamp(1.5rem, 3.5vw, 4.5rem);
+  font-weight: 400;
+  line-height: 1;
   text-transform: uppercase;
-  color: var(--light-silver);
   white-space: nowrap;
+  color: rgba(255, 255, 255, 0.5);
+  opacity: 0;
+  filter: blur(0.65rem);
+  transform-style: preserve-3d;
   pointer-events: none;
   user-select: none;
   will-change: transform, opacity, filter;
@@ -1215,6 +1251,7 @@
 
 .contact-content {
   z-index: 2;
+  gap: 2em;
   grid-column-gap: 2em;
   grid-row-gap: 2em;
   flex-flow: column;
@@ -1248,6 +1285,7 @@
 }
 
 .button-group {
+  gap: 1em;
   grid-column-gap: 1em;
   grid-row-gap: 1em;
   justify-content: center;
@@ -1274,6 +1312,7 @@
   max-height: 100svh;
   color: var(--light-silver);
   font-family: var(--body-font);
+  font-variation-settings: "wght" 670;
   flex-flow: column;
   padding: 5em 2em;
   display: flex;
@@ -1282,6 +1321,7 @@
 }
 
 .footer-top {
+  gap: 7.5em;
   grid-column-gap: 7.5em;
   grid-row-gap: 7.5em;
   flex-flow: column;
@@ -1312,6 +1352,7 @@
 }
 
 .footer-content-w {
+  gap: 2.5em;
   grid-column-gap: 2.5em;
   grid-row-gap: 2.5em;
   display: flex;
@@ -1320,6 +1361,7 @@
 }
 
 .demo-footer__col {
+  gap: 1.5em;
   grid-column-gap: 3em;
   grid-row-gap: 1.5em;
   flex-flow: column;
@@ -1337,6 +1379,7 @@
 }
 
 .footer__links-list {
+  gap: 0.25em;
   grid-column-gap: 0.25em;
   grid-row-gap: 0.25em;
   flex-flow: column;
@@ -1384,6 +1427,7 @@
 }
 
 .footer-copy__left {
+  gap: 2em;
   grid-column-gap: 2em;
   grid-row-gap: 2em;
   display: flex;
@@ -1394,7 +1438,7 @@
   font-family: var(--body-font);
   text-transform: uppercase;
   font-size: 0.95em;
-  font-weight: 400;
+  font-weight: 300;
   line-height: 1;
   margin: 0;
   color: var(--light-silver);
@@ -1413,11 +1457,13 @@
 /* Tablet Responsive */
 @media screen and (max-width: 991px) {
   .contact-content {
+    gap: 1.5em;
     grid-column-gap: 1.5em;
     grid-row-gap: 1.5em;
   }
 
   .demo-footer__col {
+    gap: 1.25em;
     grid-column-gap: 2.25em;
     grid-row-gap: 1.25em;
     width: calc(33.3333% - 1.33333em);
@@ -1429,6 +1475,7 @@
   }
 
   .footer-copy__left {
+    gap: 1.5em;
     grid-column-gap: 1.5em;
     grid-row-gap: 1.5em;
   }
@@ -1438,6 +1485,7 @@
   }
 
   .footer-content-w {
+    gap: 2em;
     grid-column-gap: 2em;
     grid-row-gap: 2em;
   }
@@ -1462,6 +1510,7 @@
   }
 
   .footer-top {
+    gap: 5.625em;
     grid-column-gap: 5.625em;
     grid-row-gap: 5.625em;
     padding: 2.25em 1.875em;
@@ -1472,24 +1521,23 @@
   }
 }
 
-/* Mobile Responsive */
+/* Mobile Landscape Responsive */
 @media screen and (max-width: 767px) {
-  .contact-heading {
-    font-size: clamp(4em, 10vw, 10em);
-  }
-
   .demo-footer__col {
+    gap: 1em;
     grid-column-gap: 1em;
     grid-row-gap: 1em;
     width: calc(33.3333% - 0.666667em);
   }
 
   .footer__links-list {
+    gap: 0em;
     grid-column-gap: 0em;
     grid-row-gap: 0em;
   }
 
   .footer-copy {
+    gap: 0.5em;
     grid-column-gap: 0.5em;
     grid-row-gap: 0.5em;
     flex-flow: column;
@@ -1505,6 +1553,7 @@
   }
 
   .footer-content-w {
+    gap: 1em;
     grid-column-gap: 1em;
     grid-row-gap: 1em;
   }
@@ -1529,6 +1578,7 @@
   }
 
   .footer-top {
+    gap: 4.21875em;
     grid-column-gap: 4.21875em;
     grid-row-gap: 4.21875em;
     padding: 1.5em;
@@ -1541,8 +1591,14 @@
   }
 }
 
+/* Mobile Portrait Responsive */
 @media screen and (max-width: 479px) {
+  .contact-heading {
+    font-size: clamp(4em, 10vw, 10em);
+  }
+
   .footer-content-w {
+    gap: 1.5em;
     grid-column-gap: 1.5em;
     grid-row-gap: 1.5em;
     flex-flow: column;
@@ -1559,6 +1615,7 @@
   }
 
   .footer-top {
+    gap: 3em;
     grid-column-gap: 3em;
     grid-row-gap: 3em;
   }

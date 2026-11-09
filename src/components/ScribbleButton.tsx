@@ -257,6 +257,7 @@ export const ScribbleButton: React.FC<ScribbleButtonProps> = ({
     ref: rootRef as any,
     'data-button-007': '',
     'data-wf--button--variant': normalizedVariant,
+    'data-wf--button-link--variant': normalizedVariant,
     'data-button-variant': normalizedVariant,
     onPointerEnter: handlePointerEnter,
     onPointerLeave: handlePointerLeave,
@@ -267,7 +268,7 @@ export const ScribbleButton: React.FC<ScribbleButtonProps> = ({
       '--button-007-font-weight': weightConfig.num,
       fontWeight: weightConfig.num,
     } as unknown as React.CSSProperties,
-    className: `button-007 ${sizeClasses} ${weightConfig.className} ${className}`,
+    className: `button-007 ${href ? 'w-inline-block ' : ''}${sizeClasses} ${weightConfig.className} ${className}`,
   }
 
   if (href) {
