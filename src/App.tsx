@@ -9,6 +9,14 @@ import { ScribbleButton } from './components/ScribbleButton'
 
 gsap.registerPlugin(useGSAP, ScrollTrigger, DrawSVGPlugin)
 
+// Personal hand-drawn signature continuous unbroken path (single stroke)
+const USER_SIGNATURE_PATH =
+  'M127.022 2.515C122.815 2.735 114.848 4.502 100.648 12.025C94.726 15.163 87.182 21.728 81.122 27.648C75.062 33.568 71.102 39.288 66.642 48.065C62.182 56.842 57.342 68.502 54.628 80.448C51.915 92.395 51.475 104.275 52.458 115.455C54.348 136.942 59.455 150.042 62.552 157.125C71.445 177.467 81.888 188.035 93.192 195.822C99.011 199.831 109.084 199.498 120.541 199.163C121.585 199.133 122.64 199.102 123.705 199.075C135.5 198.773 145.862 192.548 154.185 186.558C158.458 183.483 162.128 179.514 165.278 175.075C171.684 166.051 175.944 155.084 178.768 145.738C178.779 145.705 178.789 145.671 178.799 145.637C181.289 137.338 182.545 126.019 183.338 112.265C184.135 98.455 183.915 82.395 183.472 72.252C182.864 58.338 179.928 49.455 175.942 39.368C171.898 29.137 165.495 21.435 158.962 15.008C151.406 7.576 144.155 3.415 139.392 1.748C130.453 -1.379 124.168 5.822 111.405 13.705C105.895 17.108 102.375 23.588 98.825 33.655C93.717 48.141 95.022 66.428 95.902 81.298C96.514 91.652 101.015 97.602 105.205 107.758C108.448 115.62 115.115 128.475 121.702 139.232C133.735 158.883 143.228 167.615 146.222 169.722C147.517 170.633 148.853 171.291 150.268 171.802C154.33 173.267 159.039 173.519 165.278 175.075C165.544 175.142 165.813 175.21 166.085 175.282C175.194 177.673 184.322 177.848 189.982 177.518C191.628 177.422 193.109 176.976 194.462 176.293C198.396 174.307 201.243 170.315 203.902 167.095C205.27 165.439 204.355 161.475 203.915 159.222C203.475 156.968 202.595 156.088 200.932 155.635C199.268 155.182 196.848 155.182 195.382 155.952C190.229 158.657 192.355 169.568 194.455 176.272C194.457 176.279 194.46 176.286 194.462 176.293C196.652 183.263 201.013 186.718 205.555 189.398C212.839 193.697 221.446 182.948 225.72 176.51C226.426 175.446 227.014 174.5 227.458 173.758C231.059 167.749 230.802 161.195 230.028 158.645C229.234 156.027 226.588 154.742 223.932 154.075C222.406 153.692 220.395 153.848 218.825 154.288C215.957 155.092 214.362 157.835 213.362 160.715C212.267 163.868 214.122 167.388 216.448 170.382C218.759 173.355 221.675 175.175 224.225 176.175C224.685 176.356 225.182 176.466 225.72 176.51C227.742 176.679 230.331 175.925 233.655 174.532C236.407 173.378 238.622 171.614 240.421 169.734C242.882 167.163 244.566 164.378 245.785 162.648C247.262 160.553 247.106 158.15 246.968 156.029C246.947 155.709 246.926 155.394 246.912 155.088C246.79 152.523 245.255 149.642 242.708 146.648C241.193 144.867 239.019 143.794 237.22 143.189C235.757 142.697 234.541 142.515 234.128 142.515C230.623 142.515 233.182 142.733 237.22 143.189C242.26 143.758 249.607 144.699 250.345 146.052C250.64 146.592 250.913 147.44 251.157 148.557C252.17 153.189 252.689 162.454 252.252 173.645C252.066 178.394 248.848 178.075 246.942 177.632C243.62 176.859 241.695 174.968 240.805 173.085C240.342 172.105 240.241 170.984 240.421 169.734C240.937 166.144 243.766 161.486 246.968 156.029C248.347 153.68 249.795 151.182 251.157 148.557C251.214 148.446 251.271 148.336 251.328 148.225C257.042 137.112 266.346 133.852 272.683 132.737C272.903 132.698 273.119 132.662 273.332 132.628C275.859 132.227 278.342 132.295 279.572 131.852C281.161 131.279 275.255 131.182 272.708 132.722C272.7 132.727 272.692 132.732 272.683 132.737C267.895 135.653 267.468 141.619 267.135 144.052C266.953 145.381 267.022 146.928 267.572 148.162C268.122 149.395 269.222 150.275 270.558 150.838C271.895 151.402 273.435 151.622 274.668 151.295C278.645 150.242 280.399 145.63 281.145 141.1C281.885 136.605 281.633 132.19 281.578 131.412C281.524 130.633 281.383 134.432 281.145 141.1C280.909 147.682 280.579 157.059 280.142 167.585C280.125 167.981 280.104 168.376 280.079 168.771C279.888 171.77 279.45 174.729 278.816 177.652C276.189 189.78 270.207 201.3 264.628 212.635C256.293 229.572 251.695 236.948 250.695 238.065C248.041 241.028 252.128 227.435 255.338 216.895C258.998 204.879 262.555 198.115 275.835 181.265C276.814 180.023 277.809 178.819 278.816 177.652C284.728 170.803 291.044 165.227 296.891 160.6C303.028 155.743 308.647 151.931 312.735 148.788C313.999 147.817 315.187 146.886 316.304 145.995C328.338 136.389 332.135 131.308 334.792 127.642C336.273 125.598 335.688 122.528 335.028 120.198C334.322 117.706 329.488 117.848 325.385 118.398C317.708 119.427 314.368 126.942 312.472 131.718C310.747 136.061 311.022 140.275 311.572 143.272C311.816 144.602 313.219 145.167 314.336 145.617L314.338 145.618C314.714 145.77 315.378 145.896 316.304 145.995C318.581 146.238 322.446 146.316 327.521 146.207C332.175 146.107 337.846 145.849 344.245 145.415C350.21 145.01 351.222 142.115 352.008 140.432C352.795 138.748 353.235 137.648 352.912 137.192C352.588 136.735 351.488 136.955 346.302 138.608C343.502 139.501 339.522 140.809 327.521 146.207C320.507 149.363 310.752 153.916 296.891 160.6C291.851 163.03 286.27 165.742 280.079 168.771C278.457 169.565 276.792 170.38 275.085 171.218C218.295 199.095 114.235 251.675 59.418 278.982C4.602 306.288 2.182 306.728 1.485 306.845C-1.293 307.31 7.675 302.755 32.788 278.295C40.615 270.672 48.862 264.862 87.812 229.238C97.192 220.66 108.357 210.383 120.541 199.163C129.959 190.49 139.987 181.253 150.268 171.802C159.656 163.171 169.256 154.361 178.799 145.637C201.425 124.952 223.727 104.751 242.108 88.572C287.715 48.428 307.075 35.008 316.608 28.425C326.142 21.842 325.262 22.502 324.038 23.062C318.278 25.699 309.955 25.182 300.962 26.175C288.515 27.608 278.155 28.515 274.272 28.075C272.588 27.635 271.488 26.755 269.022 23.182'
+
+// Top accent dot stroke
+const USER_ACCENT_PATH =
+  'M230.355 21.848C230.31 21.919 230.265 21.99 230.22 22.064C228.282 25.223 226.597 31.271 227.235 36.275C227.415 37.688 229.875 38.275 232.542 38.728C235.208 39.182 238.728 39.182 240.542 37.642C242.355 36.102 242.355 33.022 241.915 30.665C241.475 28.308 240.595 26.768 238.602 25.535C236.701 24.359 233.813 23.505 230.22 22.064C230.044 21.993 229.867 21.922 229.688 21.848'
+
 // Exact winding screen-fill transition scribble path from alejandroha.com
 const SCROLL_DRAW_PATH =
   'M299.654 453.865C505.574 319.225 711.494 184.585 836.054 109.945C960.614 35.3048 997.574 24.7448 944.014 110.385C890.454 196.025 745.254 378.185 571.454 634.385C397.654 890.585 199.654 1215.3 110.854 1382.58C22.0544 1549.86 48.4544 1549.86 77.8944 1540.62C107.334 1531.38 139.014 1512.9 367.854 1319.9C596.694 1126.9 1021.73 759.945 1255.21 555.065C1488.69 350.185 1517.73 318.505 1527.41 306.145C1537.09 293.785 1526.53 301.705 1346.85 618.625C1167.17 935.545 818.694 1561.22 635.214 1896.74C451.734 2232.26 443.814 2258.66 447.654 2268.3C451.494 2277.94 467.334 2270.02 511.134 2236.9C554.934 2203.78 626.214 2145.7 966.534 1817.46C1306.85 1489.22 1914.05 892.585 2263.81 557.505C2613.57 222.425 2687.49 166.985 2741.41 129.185C2795.33 91.3848 2827.01 72.9048 2843.33 67.3448C2859.65 61.7848 2859.65 69.7048 2849.09 96.2248C2838.53 122.745 2817.41 167.625 2584.77 544.505C2352.13 921.385 1370.37 2165.43 1139.25 2537.83C908.134 2910.23 902.854 2926.07 902.774 2939.51C902.694 2952.95 907.974 2963.51 1255.21 2613.87C1602.45 2264.23 2829.73 1017.54 2903.53 1071.46C2977.33 1125.38 2176.12 2817.04 2128 3037C2079.88 3256.96 2911.24 2018.56 3172 1793'
@@ -156,6 +164,12 @@ export default function App() {
   const certificationRef = useRef<HTMLElement>(null)
   const certifiedHeadingRef = useRef<HTMLHeadingElement>(null)
 
+  // Page Loader & Curtain Transition Refs
+  const loaderWrapRef = useRef<HTMLDivElement>(null)
+  const loaderShapeRef = useRef<HTMLDivElement>(null)
+  const loaderScribblePathRef = useRef<SVGPathElement>(null)
+  const loaderSignatureRef = useRef<HTMLDivElement>(null)
+
   // Contact & Footer Section Refs
   const contactRef = useRef<HTMLElement>(null)
   const contactContentRef = useRef<HTMLDivElement>(null)
@@ -268,6 +282,11 @@ export default function App() {
       smoothWheel: true,
     })
     lenisRef.current = lenis
+
+    // Stop Lenis while page loader is active
+    if (loaderWrapRef.current && loaderWrapRef.current.style.display !== 'none') {
+      lenis.stop()
+    }
 
     const handleScroll = () => {
       ScrollTrigger.update()
@@ -471,45 +490,143 @@ export default function App() {
   // GSAP Animations: Scroll transition of brand into header + Window/Curtain Parallax
   useGSAP(
     () => {
-      // 1. Initial entrance timeline for hero items
-      const introTl = gsap.timeline({ defaults: { ease: 'power3.out' } })
+      // 1. Authentic Page Loader / Curtain Transition (Alejandro Signature & Scribble Reveal)
+      const wrapEl = loaderWrapRef.current
+      const scribblePath = loaderScribblePathRef.current
+      const sigEl = loaderSignatureRef.current
 
-      gsap.set(['.nav-button-item', '.partner-wrap', '.locate-wrap'], {
-        opacity: 0,
-        y: 20,
-      })
-      gsap.set(bgWrapRef.current, {
-        opacity: 0,
-        scale: 1.04,
-      })
+      if (wrapEl && scribblePath && sigEl) {
+        const sigPaths = sigEl.querySelectorAll<SVGPathElement>('svg path')
+        const revealItems = document.querySelectorAll('[data-transition-reveal]')
+        const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
-      introTl
-        .to(bgWrapRef.current, {
-          opacity: 1,
-          scale: 1,
-          duration: 1.4,
-          ease: 'power2.out',
+        const loaderTl = gsap.timeline({
+          onComplete: () => {
+            gsap.set(wrapEl, { display: 'none' })
+            if (lenisRef.current) {
+              lenisRef.current.resize()
+              lenisRef.current.start()
+            }
+            ScrollTrigger.refresh()
+          },
         })
-        .to(
-          '.nav-button-item',
-          {
-            opacity: 1,
-            y: 0,
+
+        if (reducedMotion || !sigPaths.length) {
+          loaderTl
+            .set(sigEl, { autoAlpha: 0 })
+            .set(scribblePath, { drawSVG: '100% 100%', strokeWidth: '5%' })
+            .set(wrapEl, { display: 'none' })
+          if (lenisRef.current) {
+            lenisRef.current.resize()
+            lenisRef.current.start()
+          }
+        } else {
+          // Temporarily disable Lenis until pageReady
+          if (lenisRef.current) {
+            lenisRef.current.stop()
+          }
+          window.scrollTo(0, 0)
+
+          // Initial state: Purple screen covers viewport, signature invisible
+          loaderTl
+            .set(wrapEl, { display: 'block', autoAlpha: 1 })
+            .set(scribblePath, { drawSVG: '0% 100%', strokeWidth: '80%' })
+            .set(sigPaths, { drawSVG: '0% 0%' })
+            .set(sigEl, { autoAlpha: 1 })
+
+          // Sequentially draw the personal signature paths with authentic natural cursive timing
+          const pathArray = Array.from(sigPaths)
+          if (pathArray[0]) {
+            // Main cursive body: single unbroken continuous stroke drawn smoothly
+            loaderTl.to(pathArray[0], {
+              drawSVG: '0% 100%',
+              duration: 1.5,
+              ease: 'power1.inOut',
+            })
+          }
+          if (pathArray[1]) {
+            // Upper accent dot stroke immediately following main body
+            loaderTl.to(pathArray[1], {
+              drawSVG: '0% 100%',
+              duration: 0.35,
+              ease: 'power1.out',
+            })
+          }
+
+          // Brief pause on completed signature
+          loaderTl.to({}, { duration: 0.35 })
+
+          // Signature paths undraw
+          loaderTl.to(sigPaths, {
+            drawSVG: '100% 100%',
             duration: 0.8,
-            stagger: 0.1,
-          },
-          '-=0.8'
-        )
-        .to(
-          ['.partner-wrap', '.locate-wrap'],
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.8,
-            stagger: 0.15,
-          },
-          '-=0.6'
-        )
+            stagger: 0.03,
+            ease: 'power2.inOut',
+          })
+
+          // Scribble peels away: stroke retracts and thins to 5%, unveiling page!
+          loaderTl.to(
+            scribblePath,
+            {
+              drawSVG: '100% 100%',
+              strokeWidth: '5%',
+              duration: 1.25,
+              ease: 'power1.inOut',
+            },
+            '< 0.35'
+          )
+
+          // Hide signature container
+          loaderTl.set(sigEl, { autoAlpha: 0 })
+
+          // Staggered upward slide and fade-in for hero badge items
+          if (revealItems.length) {
+            loaderTl.fromTo(
+              revealItems,
+              { yPercent: 25, autoAlpha: 0 },
+              {
+                yPercent: 0,
+                autoAlpha: 1,
+                duration: 1,
+                stagger: 0.15,
+                ease: 'expo.out',
+              },
+              '< 0.15'
+            )
+          }
+
+          // Also fade in the nav buttons in header
+          loaderTl.fromTo(
+            '.nav-button-item',
+            { opacity: 0, y: 15 },
+            { opacity: 1, y: 0, duration: 0.8, stagger: 0.1, ease: 'power2.out' },
+            '< 0.1'
+          )
+
+          // Subtle background canvas reveal
+          if (bgWrapRef.current) {
+            loaderTl.fromTo(
+              bgWrapRef.current,
+              { opacity: 0.85, scale: 1.03 },
+              { opacity: 1, scale: 1, duration: 1.2, ease: 'power2.out' },
+              '< 0.1'
+            )
+          }
+
+          loaderTl.add('pageReady')
+          loaderTl.call(
+            () => {
+              if (lenisRef.current) {
+                lenisRef.current.resize()
+                lenisRef.current.start()
+              }
+              ScrollTrigger.refresh()
+            },
+            [],
+            'pageReady'
+          )
+        }
+      }
 
       // 2. Window / Curtain Parallax on the oversized background canvas
       if (bgWrapRef.current && heroRef.current) {
@@ -1205,6 +1322,58 @@ export default function App() {
         </div>
       )}
 
+      {/* Authentic Page Loader / Curtain Transition from alejandroha.com */}
+      <div ref={loaderWrapRef} data-transition-wrap="" className="transition">
+        <div ref={loaderShapeRef} className="transition__shape">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="100%"
+            viewBox="0 0 3222 3114"
+            fill="none"
+            preserveAspectRatio="none"
+            className="transition__svg"
+          >
+            <path
+              ref={loaderScribblePathRef}
+              d={SCROLL_DRAW_PATH}
+              stroke="currentColor"
+              strokeWidth="80%"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </div>
+        <div
+          ref={loaderSignatureRef}
+          data-transition-signature=""
+          className="transition__signature"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="100%"
+            viewBox="0 0 355 308"
+            fill="none"
+          >
+            {/* Main Signature Body: 1 continuous unbroken stroke */}
+            <path
+              d={USER_SIGNATURE_PATH}
+              stroke="currentColor"
+              strokeWidth="3.2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            {/* Top Dot / Accent Stroke */}
+            <path
+              d={USER_ACCENT_PATH}
+              stroke="currentColor"
+              strokeWidth="3.2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </div>
+      </div>
+
       {/* Persistent Fixed Header with ultra-subtle backdrop blur and compact padding */}
       <header className="fixed top-0 left-0 right-0 z-40 w-full px-6 sm:px-10 py-3 sm:py-3.5 flex items-center justify-end pointer-events-none backdrop-blur-[3px] transition-all duration-300">
         {/* Brand Container: Absolutely positioned so it does NOT displace header buttons or overflow the flex row */}
@@ -1342,14 +1511,17 @@ export default function App() {
         {/* Bottom Bar Content in Hero */}
         <div className="relative z-30 w-full flex flex-col sm:flex-row items-start sm:items-end justify-between gap-6 mt-auto">
           {/* Bottom Left: Partner Pill */}
-          <div className="partner-wrap inline-flex items-center gap-2.5 px-4 py-2 sm:px-5 sm:py-2.5 rounded-full border border-[#080912] bg-[#e2e1e1]/80 backdrop-blur-md text-[10px] sm:text-[11px] font-semibold tracking-wider uppercase text-[#080912] shadow-sm">
+          <div
+            data-transition-reveal=""
+            className="partner-wrap inline-flex items-center gap-2.5 px-4 py-2 sm:px-5 sm:py-2.5 rounded-full border border-[#080912] bg-[#e2e1e1]/80 backdrop-blur-md text-[10px] sm:text-[11px] font-semibold tracking-wider uppercase text-[#080912] shadow-sm"
+          >
             <span>WEBFLOW PARTNER</span>
             <div className="w-1.5 h-1.5 rounded-full bg-[#080912]" />
             <span>SHOPIFY PARTNER</span>
           </div>
 
           {/* Bottom Right: Location & Language Switch */}
-          <div className="locate-wrap flex items-center gap-3 sm:gap-4 self-end">
+          <div data-transition-reveal="" className="locate-wrap flex items-center gap-3 sm:gap-4 self-end">
             <div className="text-right text-[10px] sm:text-[11px] font-semibold tracking-wider uppercase text-[#080912] leading-tight">
               {language === 'en' ? (
                 <>
