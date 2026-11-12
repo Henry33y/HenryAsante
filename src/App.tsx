@@ -1415,23 +1415,21 @@ export default function App() {
             variant="dark"
             size="sm"
             weight="normal"
-            onClick={() => showNotification('Book a Call opened')}
+            href="mailto:henryasante336@gmail.com"
+            onClick={() => showNotification('Opening email client...')}
             className="nav-button-item shadow-sm"
           >
-            BOOK A CALL
+            SEND ME AN EMAIL
           </ScribbleButton>
 
           <ScribbleButton
             variant="blue"
             size="sm"
             weight="normal"
-            onClick={() => {
-              const contactEl = document.getElementById('contact')
-              if (contactEl) {
-                contactEl.scrollIntoView({ behavior: 'smooth' })
-              }
-              showNotification("Let's talk opened")
-            }}
+            href="https://wa.me/233550325368"
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => showNotification("Opening WhatsApp...")}
             className="nav-button-item shadow-sm"
           >
             LET'S TALK
@@ -1921,14 +1919,17 @@ export default function App() {
             variant="dark"
             size="lg"
             weight="medium"
+            href="https://wa.me/233550325368"
+            target="_blank"
+            rel="noopener noreferrer"
             onClick={() =>
               showNotification(
-                language === 'en' ? 'Quote Request opened' : 'Cotización solicitada'
+                language === 'en' ? 'Opening WhatsApp...' : 'Abriendo WhatsApp...'
               )
             }
             className="shadow-sm"
           >
-            {language === 'en' ? 'QUOTE YOUR PROJECT' : 'COTIZA TU PROYECTO'}
+            {language === 'en' ? "LET'S TALK" : 'HABLEMOS'}
           </ScribbleButton>
         </div>
       </section>
@@ -2127,25 +2128,28 @@ export default function App() {
                 variant="light-silver"
                 size="md"
                 weight="normal"
-                href="https://cal.com/alejandroha/reunion-pagina-web"
-                target="_blank"
-                rel="noopener noreferrer"
+                href="mailto:henryasante336@gmail.com"
                 onClick={() =>
                   showNotification(
-                    language === 'en' ? 'Opening Cal.com booking...' : 'Abriendo agenda Cal.com...'
+                    language === 'en' ? 'Opening email client...' : 'Abriendo cliente de correo...'
                   )
                 }
               >
-                {language === 'en' ? 'Book a Call' : 'Agenda Llamada'}
+                {language === 'en' ? 'Send me an email' : 'Envíame un correo'}
               </ScribbleButton>
 
               <ScribbleButton
                 variant="dark-blue"
                 size="md"
                 weight="normal"
-                href="https://wa.me/524611407412"
+                href="https://wa.me/233550325368"
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() =>
+                  showNotification(
+                    language === 'en' ? 'Opening WhatsApp...' : 'Abriendo WhatsApp...'
+                  )
+                }
               >
                 {language === 'en' ? "Let's Talk" : 'Hablemos'}
               </ScribbleButton>
@@ -2179,34 +2183,34 @@ export default function App() {
                   <li className="footer__links-list-item">
                     <a
                       data-underline-link=""
-                      href="https://www.tiktok.com/@kr3ado"
+                      href="https://github.com/Henry33y"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="footer__links-txt"
                     >
-                      TikTok
+                      GitHub
                     </a>
                   </li>
                   <li className="footer__links-list-item">
                     <a
                       data-underline-link=""
-                      href="https://www.instagram.com/_alejandro.ha/"
+                      href="https://www.linkedin.com/in/henryasante336/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="footer__links-txt"
+                    >
+                      LinkedIn
+                    </a>
+                  </li>
+                  <li className="footer__links-list-item">
+                    <a
+                      data-underline-link=""
+                      href="https://www.instagram.com/henry._asante/"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="footer__links-txt"
                     >
                       Instagram
-                    </a>
-                  </li>
-                  <li className="footer__links-list-item">
-                    <a
-                      data-underline-link=""
-                      href="https://www.awwwards.com/alejandroha/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="footer__links-txt"
-                    >
-                      Awwwards
                     </a>
                   </li>
                 </ul>
@@ -2282,21 +2286,21 @@ export default function App() {
                   <li className="footer__links-list-item">
                     <a
                       data-underline-link=""
-                      href="mailto:info@alejandroha.com?subject=Contacto%20Alejandro%20HA"
+                      href="mailto:henryasante336@gmail.com"
                       className="footer__links-txt"
                     >
-                      info@alejandroha.com
+                      henryasante336@gmail.com
                     </a>
                   </li>
                   <li className="footer__links-list-item">
                     <a
                       data-underline-link=""
-                      href="https://wa.me/524611407412"
+                      href="https://wa.me/233550325368"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="footer__links-txt"
                     >
-                      +52 461 140 7412
+                      +233 55 032 5368
                     </a>
                   </li>
                 </ul>
@@ -2333,7 +2337,7 @@ export default function App() {
           <div className="footer-copy">
             <div className="footer-copy__left">
               <p className="footer-copy__label">Small details, big impact</p>
-              <p className="footer-copy__label">© {new Date().getFullYear()}, Alejandro Hinojosa</p>
+              <p className="footer-copy__label">© {new Date().getFullYear()}, Henry Asante</p>
             </div>
             <a
               href="https://www.luanstudio.com/"
