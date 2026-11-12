@@ -21,47 +21,47 @@ const USER_ACCENT_PATH =
 const SCROLL_DRAW_PATH =
   'M299.654 453.865C505.574 319.225 711.494 184.585 836.054 109.945C960.614 35.3048 997.574 24.7448 944.014 110.385C890.454 196.025 745.254 378.185 571.454 634.385C397.654 890.585 199.654 1215.3 110.854 1382.58C22.0544 1549.86 48.4544 1549.86 77.8944 1540.62C107.334 1531.38 139.014 1512.9 367.854 1319.9C596.694 1126.9 1021.73 759.945 1255.21 555.065C1488.69 350.185 1517.73 318.505 1527.41 306.145C1537.09 293.785 1526.53 301.705 1346.85 618.625C1167.17 935.545 818.694 1561.22 635.214 1896.74C451.734 2232.26 443.814 2258.66 447.654 2268.3C451.494 2277.94 467.334 2270.02 511.134 2236.9C554.934 2203.78 626.214 2145.7 966.534 1817.46C1306.85 1489.22 1914.05 892.585 2263.81 557.505C2613.57 222.425 2687.49 166.985 2741.41 129.185C2795.33 91.3848 2827.01 72.9048 2843.33 67.3448C2859.65 61.7848 2859.65 69.7048 2849.09 96.2248C2838.53 122.745 2817.41 167.625 2584.77 544.505C2352.13 921.385 1370.37 2165.43 1139.25 2537.83C908.134 2910.23 902.854 2926.07 902.774 2939.51C902.694 2952.95 907.974 2963.51 1255.21 2613.87C1602.45 2264.23 2829.73 1017.54 2903.53 1071.46C2977.33 1125.38 2176.12 2817.04 2128 3037C2079.88 3256.96 2911.24 2018.56 3172 1793'
 
-// Authentic Services items from alejandroha.com
+// Services items
 const servicesData = [
   {
     number: '[01]',
-    title: { en: 'Webflow development', es: 'Desarrollo Webflow' },
+    title: { en: 'Web development', es: 'Desarrollo web' },
     description: {
-      en: 'Custom Webflow websites built for complete design freedom and advanced interactions, with a clean, easy to manage CMS. Update your content anytime without relying on a developer.',
-      es: 'Sitios en Webflow pensados para libertad de diseño y animación avanzada, con estructuras simples de administrar. Actualiza contenido cuando quieras, sin depender de un desarrollador.',
+      en: 'Custom, high-performance websites and web applications built with modern frontend frameworks and clean architecture. Focused on responsiveness, speed, and intuitive interactions.',
+      es: 'Sitios y aplicaciones web a medida con alto rendimiento, construidos con frameworks modernos y arquitectura limpia. Enfocados en respuesta, velocidad e interacciones intuitivas.',
     },
     image: '/images/aha-img__02.avif',
-    imageAlt: 'Torre Agency Webflow Website Design',
+    imageAlt: 'Web development showcase',
   },
   {
     number: '[02]',
-    title: { en: 'Shopify / Ecommerce', es: 'Shopify / Ecommerce' },
+    title: { en: 'Mobile application development', es: 'Desarrollo de aplicaciones móviles' },
     description: {
-      en: 'Custom Shopify stores designed around your brand, creating shopping experiences that feel unique instead of generic.',
-      es: 'Shopify es la plataforma de ecommerce elegida por marcas de todo el mundo, y la personalizo a fondo, para una experiencia de compra que no se siente genérica.',
+      en: 'Cross-platform and native mobile applications designed for seamless user experiences on iOS and Android. Built with fluid interfaces, native performance, and offline-ready capabilities.',
+      es: 'Aplicaciones móviles nativas y multiplataforma diseñadas para experiencias fluidas en iOS y Android. Construidas con interfaces ágiles, alto rendimiento y soporte offline.',
     },
     image: '/images/aha-img__04.avif',
-    imageAlt: '1957 Studio Shopify Store Design',
+    imageAlt: 'Mobile application development showcase',
   },
   {
     number: '[03]',
-    title: { en: 'Animations & Microinteractions', es: 'Animaciones y micro-interacciones' },
+    title: { en: 'Backend & API engineering', es: 'Ingeniería backend y APIs' },
     description: {
-      en: 'Motion has a purpose. I design animations that guide users, reinforce your brand identity, and turn every scroll into a memorable experience.',
-      es: 'El movimiento comunica. Diseño animaciones que guían al usuario, refuerzan la identidad de la marca y convierten cada scroll en una experiencia memorable.',
+      en: 'Scalable backend architectures, robust REST and GraphQL APIs, and optimized database systems built for security, efficiency, and reliability under load.',
+      es: 'Arquitecturas backend escalables, APIs robustas REST y GraphQL, y sistemas de bases de datos optimizados para seguridad, eficiencia y confiabilidad bajo carga.',
     },
     image: '/images/aha-img__03.avif',
-    imageAlt: 'Laptop Animation and Interactive Interface',
+    imageAlt: 'Backend and API engineering showcase',
   },
   {
     number: '[04]',
-    title: { en: 'Custom code', es: 'Código personalizado' },
+    title: { en: 'Integrations & automation', es: 'Integraciones y automatización' },
     description: {
-      en: 'Webflow and Shopify are incredibly powerful, but some projects demand more. That\'s where custom code makes the difference, creating the kind of polished experiences often seen on <a href="https://www.awwwards.com/" data-underline-link="" target="_blank" rel="noopener noreferrer" class="underline hover:text-white transition-colors">Awwwards</a>.',
-      es: 'Webflow y Shopify son plataformas increíbles, pero hay proyectos que piden ir más allá. Ahí entra el código personalizado, el detalle que separa un sitio bueno de uno digno de un reconocimiento como <a href="https://www.awwwards.com/" data-underline-link="" target="_blank" rel="noopener noreferrer" class="underline hover:text-white transition-colors">Awwwards</a>.',
+      en: 'Connecting third-party tools, payment gateways, and cloud services into seamless automated workflows that eliminate repetitive tasks and streamline operations.',
+      es: 'Conexión de herramientas externas, pasarelas de pago y servicios en la nube en flujos automatizados que eliminan tareas repetitivas y optimizan procesos.',
     },
     image: '/images/aha-img__05.avif',
-    imageAlt: 'Developer working with custom code and animations',
+    imageAlt: 'Integrations and automation showcase',
   },
 ]
 
@@ -178,7 +178,7 @@ export default function App() {
   const footerInnerRef = useRef<HTMLElement>(null)
 
   const lenisRef = useRef<Lenis | null>(null)
-  const [language, setLanguage] = useState<'en' | 'es'>('en')
+  const [language] = useState<'en' | 'es'>('en')
   const [copiedNotification, setCopiedNotification] = useState<string | null>(null)
   const [isScrolled, setIsScrolled] = useState(false)
 
@@ -1381,83 +1381,30 @@ export default function App() {
           <button
             ref={brandRef}
             onClick={scrollToTop}
-            aria-label="Alejandro HA - Scroll to top"
+            aria-label="Henry Asante - Scroll to top"
             className={`pointer-events-auto block origin-top-left text-left bg-transparent border-none p-0 cursor-pointer transition-opacity duration-300 ${isScrolled ? 'hover:opacity-75' : ''
               }`}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 1376 165"
+              viewBox="0 0 1010 160"
               className={`w-full h-auto block transition-colors duration-500 ${
                 isBrandWhite ? 'text-white' : 'text-[#080912]'
               }`}
               fill="none"
             >
-              {/* Letter A */}
-              <path
-                d="M107.404 138.328H90.0567L87.187 123.847L81.6411 110.559H24.0861L18.3789 123.847L15.5092 138.328H0L44.5931 33.7676L41.0462 26.5109H60.07L107.372 138.328H107.404ZM77.4494 100.755L52.8797 42.3143L28.1488 100.755H77.4817H77.4494Z"
+              <text
+                x="0"
+                y="128"
+                fontFamily="'Gallient', serif"
+                fontWeight="normal"
+                fontSize="130"
+                letterSpacing="0.02em"
                 fill="currentColor"
-              />
-              {/* Letter L */}
-              <path
-                d="M202.652 124.847L200.62 138.328H125.88L128.233 123.008V41.8305L125.88 26.5109H143.549L141.356 41.8305V128.362H187.143L202.62 124.814L202.652 124.847Z"
-                fill="currentColor"
-              />
-              {/* Letter E */}
-              <path
-                d="M308.217 125.169L306.186 138.296H224.223L226.576 122.976V41.8305L224.223 26.5109H305.541L307.572 39.6374L292.096 36.0897H239.571V76.1787H278.972L292.257 74.5016V87.3055L278.972 85.6284H239.571V128.717H292.773L308.25 125.169H308.217Z"
-                fill="currentColor"
-              />
-              {/* Letter J */}
-              <path
-                d="M323.663 131.426V115.268L340.171 128.072C343.202 129.265 346.556 129.942 349.587 129.942C362.871 129.942 370.126 122.363 370.126 107.882V41.8305L367.772 26.5109H385.442L383.249 41.8305L383.088 105.979C383.088 127.04 371.319 139.811 350.586 139.811C341.171 139.811 333.4 137.296 323.663 131.394V131.426Z"
-                fill="currentColor"
-              />
-              {/* Letter A */}
-              <path
-                d="M507 138.328H489.653L486.783 123.847L481.237 110.559H423.65L417.943 123.847L415.073 138.328H399.596L444.189 33.7676L440.643 26.5109H459.666L506.968 138.328H507ZM477.013 100.755L452.444 42.3143L427.713 100.755H477.046H477.013Z"
-                fill="currentColor"
-              />
-              {/* Letter N */}
-              <path
-                d="M625.657 26.5109L623.303 41.8305V138.328H605.118L539.115 37.1218V123.008L541.308 138.328H525.476L527.83 123.008V41.8305L525.476 26.5109H546.338L611.986 127.362V41.8305L609.793 26.5109H625.625H625.657Z"
-                fill="currentColor"
-              />
-              {/* Letter D */}
-              <path
-                d="M656.964 123.008V41.8305L654.611 26.5109H696.012C735.059 26.5109 754.76 44.1849 754.76 82.242C754.76 120.299 735.059 138.328 696.012 138.328H654.611L656.964 123.008ZM696.495 128.556C725.966 128.556 741.088 114.591 741.088 82.242C741.088 49.8935 726.095 36.2832 696.657 36.2832H669.894V128.556H696.495Z"
-                fill="currentColor"
-              />
-              {/* Letter R */}
-              <path
-                d="M875.772 138.328H855.071L850.364 126.201L822.924 91.853H795.84V123.008L798.709 138.328H780.363L782.716 123.008V41.8305L780.363 26.5109H830.179C856.103 26.5109 868.742 38.1216 868.742 58.8272C868.742 76.1787 857.457 87.628 836.757 89.9824L875.804 138.296L875.772 138.328ZM826.116 81.9195C844.302 81.9195 855.587 73.8243 855.587 58.8595C855.587 43.8946 846.656 35.7995 828.47 35.7995H795.485V81.9195H826.116Z"
-                fill="currentColor"
-              />
-              {/* Letter O */}
-              <path
-                d="M893.763 82.242C893.763 45.3782 916.14 23.4793 949.319 23.4793C982.498 23.4793 1004.87 45.3782 1004.87 82.242C1004.87 119.106 982.143 141.521 949.319 141.521C916.495 141.521 893.763 119.138 893.763 82.242ZM991.075 82.242C991.075 50.9255 973.728 33.5741 949.319 33.5741C924.911 33.5741 907.563 50.9255 907.563 82.242C907.563 113.558 924.749 131.232 949.158 131.232C973.566 131.232 991.075 113.72 991.075 82.242Z"
-                fill="currentColor"
-              />
-              {/* Left Bracket [ */}
-              <path
-                d="M1079.17 156.679C1085.58 158.13 1091.16 156.679 1097.38 157.389C1098.09 159.549 1097.8 162.065 1098.29 164.807L1070.27 164.968L1070.33 0.0645027H1097.54C1098 2.77365 1098.22 5.09578 1097.29 7.09539L1079.23 7.48241V156.679H1079.17Z"
-                fill="currentColor"
-              />
-              {/* Letter H */}
-              <path
-                d="M1120.86 123.169V41.8628L1118.5 26.5109H1136.2L1134.01 41.8628V76.1142H1200.43V41.8628L1198.24 26.5109H1215.94L1213.59 41.8628V123.169L1215.94 138.521H1198.24L1200.43 123.169V86.0477H1134.01V123.169L1136.2 138.521H1118.5L1120.86 123.169Z"
-                fill="currentColor"
-              />
-              {/* Letter A */}
-              <path
-                d="M1342.08 138.521H1324.7L1321.83 124.008L1316.25 110.688H1258.57L1252.83 124.008L1249.96 138.521H1234.45L1279.14 33.7676L1275.59 26.5109H1294.65L1342.05 138.521H1342.08ZM1312.06 100.884L1287.43 42.3466L1262.63 100.884H1312.03H1312.06Z"
-                fill="currentColor"
-              />
-              {/* Right Bracket ] */}
-              <path
-                d="M1349.5 157.518L1367.07 156.937V7.51466L1349.27 6.86963C1349.11 4.57975 1348.53 1.12881 1349.98 0.193511L1376.03 0L1375.9 164.839L1349.66 165C1348.75 162.71 1348.91 160.42 1349.53 157.55L1349.5 157.518Z"
-                fill="currentColor"
-              />
+                className="select-none uppercase"
+              >
+                HENRY ASANTE
+              </text>
             </svg>
           </button>
         </div>
@@ -1468,20 +1415,26 @@ export default function App() {
             variant="dark"
             size="sm"
             weight="normal"
-            onClick={() => showNotification(language === 'en' ? 'Book a Call opened' : 'Reunión agendada')}
+            onClick={() => showNotification('Book a Call opened')}
             className="nav-button-item shadow-sm"
           >
-            {language === 'en' ? 'BOOK A CALL' : 'AGENDAR LLAMADA'}
+            BOOK A CALL
           </ScribbleButton>
 
           <ScribbleButton
             variant="blue"
             size="sm"
             weight="normal"
-            onClick={() => showNotification(language === 'en' ? 'Quote Request opened' : 'Cotización solicitada')}
+            onClick={() => {
+              const contactEl = document.getElementById('contact')
+              if (contactEl) {
+                contactEl.scrollIntoView({ behavior: 'smooth' })
+              }
+              showNotification("Let's talk opened")
+            }}
             className="nav-button-item shadow-sm"
           >
-            {language === 'en' ? 'GET A QUOTE' : 'COTIZAR AHORA'}
+            LET'S TALK
           </ScribbleButton>
         </div>
       </header>
@@ -1503,64 +1456,35 @@ export default function App() {
             onError={(e) => {
               e.currentTarget.src = '/hero-reference.jpg'
             }}
-            alt="Alejandro HA - Creative Web Developer"
+            alt="Henry Asante - Software Engineer"
             className="w-full h-full object-cover object-[center_bottom] sm:object-[center_32%] pointer-events-none select-none"
           />
         </div>
 
         {/* Bottom Bar Content in Hero */}
         <div className="relative z-30 w-full flex flex-col sm:flex-row items-start sm:items-end justify-between gap-6 mt-auto">
-          {/* Bottom Left: Partner Pill */}
+          {/* Bottom Left: Role Pill */}
           <div
             data-transition-reveal=""
             className="partner-wrap inline-flex items-center gap-2.5 px-4 py-2 sm:px-5 sm:py-2.5 rounded-full border border-[#080912] bg-[#e2e1e1]/80 backdrop-blur-md text-[10px] sm:text-[11px] font-semibold tracking-wider uppercase text-[#080912] shadow-sm"
           >
-            <span>WEBFLOW PARTNER</span>
+            <span>SOFTWARE ENGINEER</span>
             <div className="w-1.5 h-1.5 rounded-full bg-[#080912]" />
-            <span>SHOPIFY PARTNER</span>
+            <span>FULL-STACK DEVELOPER</span>
           </div>
 
-          {/* Bottom Right: Location & Language Switch */}
+          {/* Bottom Right: Location & Globe */}
           <div data-transition-reveal="" className="locate-wrap flex items-center gap-3 sm:gap-4 self-end">
             <div className="text-right text-[10px] sm:text-[11px] font-semibold tracking-wider uppercase text-[#080912] leading-tight">
-              {language === 'en' ? (
-                <>
-                  BASED IN MEXICO,
-                  <span className="block">WORKING GLOBALLY.</span>
-                </>
-              ) : (
-                <>
-                  EN MÉXICO,
-                  <span className="block">TRABAJANDO GLOBALMENTE.</span>
-                </>
-              )}
+              BASED IN GHANA,
+              <span className="block">WORKING GLOBALLY.</span>
             </div>
 
-            {/* Language Switch Button with Tooltip and 3D Rotating Globe */}
-            <div className="relative group cursor-pointer">
-              {/* Tooltip */}
-              <div className="absolute bottom-[calc(100%+0.6rem)] left-1/2 -translate-x-1/2 flex flex-col items-center pointer-events-none opacity-0 group-hover:opacity-100 transition-all duration-300 transform group-hover:-translate-y-1">
-                <div className="backdrop-blur-md bg-white/70 border border-white/80 rounded-lg px-2.5 py-1 shadow-sm whitespace-nowrap">
-                  <span className="text-[10px] font-semibold text-[#080912]">
-                    {language === 'en' ? 'Cambiar idioma' : 'Switch Language'}
-                  </span>
-                </div>
-                {/* Tooltip Tip Arrow */}
-                <div className="w-3 text-white/80 -mt-0.5">
-                  <svg viewBox="0 0 124 30" fill="none" className="w-full h-auto">
-                    <path
-                      d="M103.284 3L121 3C122.657 3 124 1.65685 124 0L0 0C0 1.65685 1.34315 3 3 3L20.7157 3C26.0201 3 31.1071 5.10713 34.8579 8.85786L51.3934 25.3934C57.2513 31.2513 66.7487 31.2513 72.6066 25.3934L89.1421 8.85786C92.8929 5.10714 97.9799 3 103.284 3Z"
-                      fill="currentColor"
-                    />
-                  </svg>
-                </div>
-              </div>
-
-              {/* Rotating 3D Globe */}
-              <button
-                onClick={() => setLanguage((prev) => (prev === 'en' ? 'es' : 'en'))}
-                aria-label="Switch Language"
-                className="rotating-globe cursor-pointer transition-transform duration-300 hover:scale-110 active:scale-95"
+            {/* Rotating 3D Globe */}
+            <div className="relative pointer-events-none select-none">
+              <div
+                className="rotating-globe"
+                aria-hidden="true"
               >
                 <div className="globe">
                   <div className="globe-wrap">
@@ -1571,7 +1495,7 @@ export default function App() {
                     <div className="circle-hor-middle" />
                   </div>
                 </div>
-              </button>
+              </div>
             </div>
           </div>
         </div>
@@ -1586,23 +1510,12 @@ export default function App() {
           {/* Top Left Header Wrap */}
           <div className="w-full max-w-[38rem] flex flex-col">
             <h1 className="about-header-item text-3xl sm:text-4xl md:text-5xl lg:text-[3.5rem] xl:text-[3.85rem] font-extrabold uppercase tracking-tight leading-[1.0] text-[#080912]">
-              {language === 'en' ? (
-                <>
-                  Creative Web
-                  <span className="block mt-1 sm:mt-1.5">Development</span>
-                </>
-              ) : (
-                <>
-                  Desarrollo Web
-                  <span className="block mt-1 sm:mt-1.5">Creativo</span>
-                </>
-              )}
+              Web & Mobile
+              <span className="block mt-1 sm:mt-1.5">Development</span>
             </h1>
 
             <p className="about-header-item text-sm sm:text-base md:text-lg text-[#080912]/80 mt-5 sm:mt-6 max-w-[24rem] sm:max-w-[28rem] font-medium leading-relaxed">
-              {language === 'en'
-                ? 'Modern, custom-built websites enhanced with animations that make an impact.'
-                : 'Sitios modernos, funcionales y hechos a medida con animaciones que marcan la diferencia.'}
+              Modern, custom-built software and applications engineered to make an impact.
             </p>
           </div>
 
@@ -1633,14 +1546,16 @@ export default function App() {
             {/* Bio Paragraphs */}
             <div className="about-bio-item space-y-6 sm:space-y-7 mt-8 sm:mt-10 text-base sm:text-lg md:text-[1.125rem] text-[#080912]/85 leading-relaxed font-normal">
               <p>
-                {language === 'en'
-                  ? "I'm Alejandro, a freelance web developer specializing in websites that not only look great but feel intuitive. I focus on Webflow, Shopify, and custom code to build digital experiences that reflect the unique identity of every brand."
-                  : 'Soy Alejandro, desarrollador web freelance especializado en crear sitios que no solo se ven bien, sino que se sienten bien. Me enfoco en Webflow, Shopify y código personalizado para construir experiencias digitales que reflejan la identidad de cada marca.'}
+                I'm Henry, a software developer based in Ghana with an interest in building practical, meaningful digital products.
               </p>
               <p>
-                {language === 'en'
-                  ? 'Every website I build is fully custom, never based on generic templates or one-size-fits-all solutions. Whether it’s an emerging startup or an established brand, I approach every project with the same commitment to craftsmanship, precision, and attention to detail.'
-                  : 'Cada sitio que construyo es 100% a medida, nada de plantillas genéricas ni soluciones prefabricadas. Trabajo con clientes de todo el mundo, desde startups que están arrancando hasta marcas ya consolidadas, y le pongo la misma atención a cada detalle sin importar el tamaño del proyecto.'}
+                I enjoy working across the software development process, from understanding a problem and designing a solution to building the interfaces, backend systems and integrations that bring it to life.
+              </p>
+              <p>
+                My experience spans web and mobile development, with a growing interest in AI and emerging technologies. I'm particularly interested in building software that simplifies everyday processes, improves experiences and solves problems that matter.
+              </p>
+              <p>
+                For me, good software isn't just about making things work. It's about understanding why they need to exist in the first place.
               </p>
             </div>
 
@@ -2232,7 +2147,7 @@ export default function App() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                {language === 'en' ? 'Get a Quote' : 'Cotiza aquí'}
+                {language === 'en' ? "Let's Talk" : 'Hablemos'}
               </ScribbleButton>
             </div>
           </div>
